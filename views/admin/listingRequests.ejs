@@ -1,0 +1,103 @@
+<% layout("/layouts/boilerplate")%>
+
+<div class="row mt-4 mb-5">
+    <div class="col-lg-10 offset-lg-1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="mb-1">Listing Requests</h1>
+                <p class="text-muted mb-0">Review pending owner submissions before they appear publicly.</p>
+            </div>
+            <a href="/admin" class="btn btn-outline-secondary">Back to Dashboard</a>
+        </div>
+
+        <% if (pendingListings.length === 0) { %>
+            <p class="text-muted">No pending listing requests.</p>
+        <% } %>
+
+        <div class="row row-cols-1 row-cols-lg-2 g-4">
+            <% for (let listing of pendingListings) { %>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.image.filename || listing.title %>">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= listing.title %></h5>
+                            <p class="card-text mb-1"><%= listing.location %>, <%= listing.country %></p>
+                            <p class="text-muted mb-2">&#8377; <%= listing.price.toLocaleString("en-IN") %> / night</p>
+                            <p class="card-text"><%= listing.description %></p>
+
+                            <% if (listing.UserID) { %>
+                                <p class="text-muted mb-2">Submitted by <%= listing.UserID.username %> (<%= listing.UserID.email %>)</p>
+                            <% } %>
+
+                            <div class="mb-3">
+                                <h6>Documents</h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <% if (listing.documents && listing.documents.aadharCard) { %>
+                                        <a class="btn btn-sm btn-outline-secondary" href="<%= listing.documents.aadharCard.url %>" target="_blank">Aadhar Card</a>
+                                    <% } %>
+                                    <% if (listing.documents && listing.documents.electricityBill) { %>
+                                        <a class="btn btn-sm btn-outline-secondary" href="<%= listing.documents.electricityBill.url %>" target="_blank">Electricity Bill</a>
+                                    <% } %>
+                                    <% if (listing.documents && listing.documents.salesDeed) { %>
+                                        <a class="btn btn-sm btn-outline-secondary" href="<%= listing.documents.salesDeed.url %>" target="_blank">Sales Deed</a>
+                                    <% } %>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <h6>Sustainability score: <%= listing.sustainabilityRating || 0 %> / 5</h6>
+                                <% const labels = {hasSolar: "Solar", wasteSegregation: "Waste segregation", rainwaterHarvesting: "Rainwater harvesting", energyEfficientAppliances: "Efficient appliances", publicTransportAccess: "Public transport", waterSavingFixtures: "Water saving fixtures"}; %>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <% for (let field of Object.keys(labels)) { %>
+                                        <span class="badge text-bg-<%= listing.sustainabilityChecklist && listing.sustainabilityChecklist[field] ? "success" : "secondary" %>"><%= labels[field] %></span>
+                                    <% } %>
+                                </div>
+                                <% if (listing.sustainabilityEvidence && listing.sustainabilityEvidence.length) { %>
+                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                        <% listing.sustainabilityEvidence.forEach((file, index) => { %>
+                                            <a class="btn btn-sm btn-outline-secondary" href="<%= file.url %>" target="_blank">Evidence <%= index + 1 %></a>
+                                        <% }) %>
+                                    </div>
+                                <% } %>
+                            </div>
+
+                            <div class="d-flex flex-wrap align-items-end gap-2">
+                                <form action="/admin/listing-requests/<%= listing._id %>/approve" method="POST" class="w-100">
+                                    <div class="mb-2">
+                                        <p class="mb-1 fw-semibold">Verify sustainability items (uncheck any you cannot confirm):</p>
+                                        <% const verifyLabels = {hasSolar: "Solar power", wasteSegregation: "Waste segregation", rainwaterHarvesting: "Rainwater harvesting", energyEfficientAppliances: "Efficient appliances", publicTransportAccess: "Public transport", waterSavingFixtures: "Water saving fixtures"}; %>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <% for (let field of Object.keys(verifyLabels)) { %>
+                                                <div class="form-check">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="sustainabilityChecklist[<%= field %>]"
+                                                        id="verify-<%= listing._id %>-<%= field %>"
+                                                        <%= listing.sustainabilityChecklist && listing.sustainabilityChecklist[field] ? "checked" : "" %>
+                                                    >
+                                                    <label class="form-check-label small" for="verify-<%= listing._id %>-<%= field %>">
+                                                        <%= verifyLabels[field] %>
+                                                    </label>
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-success" type="submit">Approve</button>
+                                </form>
+                                <form action="/admin/listing-requests/<%= listing._id %>/reject" method="POST" class="d-flex align-items-end gap-2">
+                                    <div>
+                                        <label class="form-label mb-1" for="rejectionReason-<%= listing._id %>">Reason</label>
+                                        <input class="form-control form-control-sm" type="text" name="rejectionReason" id="rejectionReason-<%= listing._id %>" required>
+                                    </div>
+                                    <button class="btn btn-outline-danger" type="submit">Reject</button>
+                                </form>
+                                <a href="/listings/<%= listing._id %>" class="btn btn-outline-secondary">View</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>

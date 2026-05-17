@@ -1,0 +1,64 @@
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/dashboard"><img src="/css/small logo.png" alt="" class="logo"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="/dashboard">Home</a>
+        <a class="nav-link" href="/listings">All Listings</a>
+        <% if (currUser && !currAdmin) { %>
+          <a class="nav-link" href="/listings/my-listings">My Listings</a>
+          <a class="nav-link" href="/owner/bookings">Booking Requests</a>
+          <% } %>
+            <% if (!currAdmin) { %>
+              <a class="nav-link" href="/about">About us</a>
+              <a class="nav-link" href="/contact">Contact</a>
+              <% } %>
+      </div>
+      <div class="navbar-nav ms-auto">
+        <button class="btn theme-toggle-btn me-md-2" id="themeToggle" type="button" aria-label="Switch to dark mode"
+          title="Switch to dark mode">
+          <i class="fa-solid fa-moon" aria-hidden="true"></i>
+        </button>
+        <% if (currAdmin) { %>
+          <a class="nav-link" href="/admin">Admin Dashboard</a>
+          <a class="nav-link" href="/admin/listing-requests">Requests</a>
+          <form action="/admin/logout" method="POST">
+            <button class="nav-link btn btn-link text-bg-danger" type="submit">Logout</button>
+          </form>
+          <% } else if (currUser) { %>
+            <div class="nav-item dropdown">
+              <button class="btn profile-menu-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img
+                  src="<%= currUser.profileImage && currUser.profileImage.url ? currUser.profileImage.url : '/uploads/icon.png' %>"
+                  alt="<%= currUser.username %>" class="profile-avatar">
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <h6 class="dropdown-header">
+                    <%= currUser.username %>
+                  </h6>
+                </li>
+                <li><a class="dropdown-item" href="/profile/settings">Settings</a></li>
+                <li><a class="dropdown-item" href="/my-bookings">My Bookings</a></li>
+                <li><a class="dropdown-item" href="/profile/pending-listings">Pending Listings</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li>
+                  <form action="/logout" method="POST">
+                    <button class="dropdown-item" type="submit">Logout</button>
+                  </form>
+                </li>
+              </ul>
+            </div>
+            <% } else { %>
+              <a class="nav-link" href="/signup">Sign up</a>
+              <a class="nav-link" href="/login">Log in</a>
+              <% } %>
+      </div>
+    </div>
+  </div>
+</nav>

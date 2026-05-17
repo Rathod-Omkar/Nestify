@@ -1,0 +1,82 @@
+<% layout("/layouts/boilerplate")%>
+
+    <div class="row mt-4 mb-5">
+        <div class="col-lg-8 offset-lg-2">
+            <h1 class="mb-4">Profile Settings</h1>
+
+            <% if (error) { %>
+                <div class="alert alert-danger">
+                    <%= error %>
+                </div>
+                <% } %>
+
+                    <% if (success) { %>
+                        <div class="alert alert-success">
+                            <%= success %>
+                        </div>
+                        <% } %>
+
+                            <div class="d-flex align-items-center gap-3 mb-4">
+                                <img src="<%= currUser.profileImage && currUser.profileImage.url ? currUser.profileImage.url : '/uploads/icon.png' %>"
+                                    alt="<%= currUser.username %>" class="profile-settings-avatar">
+                                <div>
+                                    <h4 class="mb-1">
+                                        <%= currUser.username %>
+                                    </h4>
+                                    <p class="text-muted mb-0">
+                                        <%= currUser.email %>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <form action="/profile/settings" method="POST" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label class="form-label" for="profileImage">Profile Image</label>
+                                    <input type="file" name="profileImage" id="profileImage" accept="image/*"
+                                        class="form-control">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="username">Name</label>
+                                    <input type="text" name="user[username]" id="username"
+                                        value="<%= currUser.username %>" class="form-control" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="email">Email</label>
+                                    <input type="email" name="user[email]" id="email" value="<%= currUser.email %>"
+                                        class="form-control" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="phoneNumber">Phone Number</label>
+                                    <input type="tel" name="user[phoneNumber]" id="phoneNumber"
+                                        value="<%= currUser.phoneNumber || "" %>" class="form-control">
+                                </div>
+
+                                <!-- <div class="mb-3">
+                <label class="form-label" for="gender">Gender</label>
+                <select name="user[gender]" id="gender" class="form-select" required>
+                    <option value="prefer-not-to-say" <%= currUser.gender === "prefer-not-to-say" ? "selected" : "" %>>Prefer not to say</option>
+                    <option value="female" <%= currUser.gender === "female" ? "selected" : "" %>>Female</option>
+                    <option value="male" <%= currUser.gender === "male" ? "selected" : "" %>>Male</option>
+                    <option value="other" <%= currUser.gender === "other" ? "selected" : "" %>>Other</option>
+                </select>
+            </div> -->
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="currentPassword">Current Password</label>
+                                    <input type="password" name="user[currentPassword]" id="currentPassword"
+                                        class="form-control">
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label" for="newPassword">New Password</label>
+                                    <input type="password" name="user[newPassword]" id="newPassword"
+                                        class="form-control">
+                                </div>
+
+                                <button type="submit" class="btn btn-dark">Update Profile</button>
+                            </form>
+        </div>
+    </div>

@@ -1,0 +1,57 @@
+<% layout("/layouts/boilerplate")%>
+
+<div class="row mt-4 mb-5">
+    <div class="col-lg-10 offset-lg-1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="mb-1">Pending Listings</h1>
+                <p class="text-muted mb-0">Listings you submitted that are waiting for admin review.</p>
+            </div>
+            <a href="/listings/new" class="btn btn-dark">Create Listing</a>
+        </div>
+
+        <% if (pendingListings.length === 0) { %>
+            <p class="text-muted">You do not have any pending listings right now.</p>
+        <% } else { %>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Location</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let listing of pendingListings) { %>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <img src="<%= listing.image.url %>" alt="<%= listing.image.filename || listing.title %>" class="pending-listing-thumb">
+                                        <span><%= listing.title %></span>
+                                    </div>
+                                </td>
+                                <td><%= listing.location %>, <%= listing.country %></td>
+                                <td>&#8377; <%= listing.price.toLocaleString("en-IN") %> / night</td>
+                                <td>
+                                    <span class="badge text-bg-<%= listing.status === "rejected" ? "danger" : "warning" %>"><%= listing.status %></span>
+                                    <% if (listing.rejectionReason) { %>
+                                        <div class="small text-muted mt-1"><%= listing.rejectionReason %></div>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a href="/listings/<%= listing._id %>" class="btn btn-sm btn-outline-secondary">View</a>
+                                        <a href="/listings/<%= listing._id %>/edit" class="btn btn-sm btn-outline-dark">Edit</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+    </div>
+</div>

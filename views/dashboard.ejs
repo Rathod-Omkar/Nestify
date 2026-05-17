@@ -1,0 +1,162 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+    <div class="dashboard-hero">
+        <div class="dashboard-hero-content">
+            <h1 class="dashboard-welcome">Welcome back, <span class="dashboard-username">
+                    <%= currUser.username %>
+                </span> 👋</h1>
+            <p class="dashboard-subtitle">What are you looking for today?</p>
+
+            <div class="dashboard-cards">
+                <a href="/listings?category=normal" class="dashboard-card dashboard-card-normal">
+                    <div class="dashboard-card-icon">🏠</div>
+                    <h2>Private Listings</h2>
+                    <p>Private homes, apartments &amp; standalone properties for solo or family stays.</p>
+                    <span class="dashboard-card-btn">Browse Normal &rarr;</span>
+                </a>
+
+                <a href="/listings?category=shared" class="dashboard-card dashboard-card-shared">
+                    <div class="dashboard-card-icon">🤝</div>
+                    <h2>Co-Nest</h2>
+                    <p>Shared spaces, co-living &amp; community-style accommodations.</p>
+                    <span class="dashboard-card-btn">Browse Co-Nest &rarr;</span>
+                </a>
+            </div>
+
+            <div class="dashboard-actions">
+                <a href="/listings" class="btn btn-outline-secondary">View All Listings</a>
+                <a href="/listings/my-listings" class="btn btn-outline-dark">My Listings</a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .dashboard-hero {
+            min-height: calc(100vh - 70px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8edf5 100%);
+            padding: 2rem 1rem;
+        }
+
+        [data-bs-theme="dark"] .dashboard-hero {
+            background: linear-gradient(135deg, #1a1d24 0%, #232733 100%);
+        }
+
+        .dashboard-hero-content {
+            text-align: center;
+            max-width: 860px;
+            width: 100%;
+        }
+
+        .dashboard-welcome {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-username {
+            color: #6366f1;
+        }
+
+        [data-bs-theme="dark"] .dashboard-username {
+            color: #818cf8;
+        }
+
+        .dashboard-subtitle {
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 2.5rem;
+        }
+
+        .dashboard-cards {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            flex: 1 1 280px;
+            max-width: 340px;
+            border-radius: 1.25rem;
+            padding: 2.5rem 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+            color: inherit;
+        }
+
+        .dashboard-card-normal {
+            background: #ffffff;
+            border-color: #e5e7eb;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+        }
+
+        [data-bs-theme="dark"] .dashboard-card-normal {
+            background: #1e2130;
+            border-color: #374151;
+        }
+
+        .dashboard-card-shared {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: #ffffff !important;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .dashboard-card-shared:hover {
+            color: #ffffff !important;
+            box-shadow: 0 16px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .dashboard-card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+
+        .dashboard-card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-card p {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin-bottom: 1.25rem;
+        }
+
+        .dashboard-card-btn {
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.02em;
+        }
+
+        .dashboard-card-normal .dashboard-card-btn {
+            color: #6366f1;
+        }
+
+        .dashboard-card-shared .dashboard-card-btn {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .dashboard-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    </style>

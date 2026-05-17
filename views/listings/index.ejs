@@ -1,0 +1,151 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+    <body>
+        <h1>All Listings</h1>
+
+        <% const todayISO=new Date().toISOString().split("T")[0]; %>
+
+            <form action="/listings" method="GET" class="listing-filter-bar mb-4">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label" for="location">Location</label>
+                        <input type="text" name="location" id="location" class="form-control"
+                            value="<%= filters.location || "" %>" placeholder="City, country, title">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="minPrice">Min price</label>
+                        <input type="number" name="minPrice" id="minPrice" class="form-control"
+                            value="<%= filters.minPrice || "" %>">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="maxPrice">Max price</label>
+                        <input type="number" name="maxPrice" id="maxPrice" class="form-control"
+                            value="<%= filters.maxPrice || "" %>">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label" for="womenSafetyRating">Women safety</label>
+                        <select name="womenSafetyRating" id="womenSafetyRating" class="form-select">
+                            <option value="">Any</option>
+                            <% for (let rating=1; rating <=5; rating++) { %>
+                                <option value="<%= rating %>" <%=Number(filters.womenSafetyRating)===rating ? "selected"
+                                    : "" %>><%= rating %>+</option>
+                                <% } %>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="checkIn">Check-in</label>
+                        <input type="date" name="checkIn" id="checkIn" class="form-control"
+                            value="<%= filters.checkIn || "" %>" min="<%= todayISO %>">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="checkOut">Check-out</label>
+                        <input type="date" name="checkOut" id="checkOut" class="form-control"
+                            value="<%= filters.checkOut || "" %>" min="<%= todayISO %>">
+                    </div>
+
+                    <%# Sustainability feature checkboxes %>
+                        <div class="col-12">
+                            <label class="form-label mb-1">Sustainability Features</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                <% const selectedFeatures=[].concat(filters.features || []); %>
+                                    <% for (let field of sustainabilityFields) { %>
+                                        <div class="form-check form-check-inline mb-0">
+                                            <input class="form-check-input" type="checkbox" name="features"
+                                                id="feat-<%= field %>" value="<%= field %>"
+                                                <%=selectedFeatures.includes(field) ? "checked" : "" %>
+                                            >
+                                            <label class="form-check-label" for="feat-<%= field %>">
+                                                <%= sustainabilityLabels[field] %>
+                                            </label>
+                                        </div>
+                                        <% } %>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 d-flex gap-2">
+                            <button type="submit" class="btn btn-dark">Search</button>
+                            <a href="/listings" class="btn btn-outline-secondary">Clear</a>
+                        </div>
+                </div>
+            </form>
+
+            <%# Category tabs %>
+                <div class="mb-3 d-flex gap-2">
+                    <a href="/listings"
+                        class="btn btn-sm <%= !filters.category ? 'btn-dark' : 'btn-outline-secondary' %>">All</a>
+                    <a href="/listings?category=normal"
+                        class="btn btn-sm <%= filters.category === 'normal' ? 'btn-dark' : 'btn-outline-secondary' %>">Normal</a>
+                    <a href="/listings?category=shared"
+                        class="btn btn-sm <%= filters.category === 'shared' ? 'btn-dark' : 'btn-outline-secondary' %>">Co-Nest
+                        (Shared)</a>
+                </div>
+
+                <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1">
+
+                    <% for(let listing of allListings){ %>
+                        <a href="/listings/<%= listing._id %>" class="listing-links">
+                            <div class="card col">
+                                <img src="<%= listing.image.url%>" class="card-img-top"
+                                    alt="<%= listing.image.filename%>">
+                                <div class="card-img-overlay"></div>
+                                <div class="card-body">
+                                    <% const womenSafetyRating=listing.womenSafetyRating &&
+                                        listing.womenSafetyRating.average ?
+                                        Math.round(listing.womenSafetyRating.average) : 0; %>
+                                        <p class="card-text"><b>
+                                                <%= listing.title %>
+                                            </b> <br> &#8377; <%= listing.price.toLocaleString("en-IN") %>/night</p>
+                                        <div class="listing-rating-lines">
+                                            <span
+                                                class="badge <%= listing.category === 'shared' ? 'text-bg-primary' : 'text-bg-light' %> me-1">
+                                                <%= listing.category==='shared' ? 'Co-Nest' : 'Normal' %>
+                                            </span>
+                                            <span>Women safety <span class="rating-stars">
+                                                    <%= "★" .repeat(womenSafetyRating) %>
+                                                        <%= "☆" .repeat(5 - womenSafetyRating) %>
+                                                </span></span>
+                                        </div>
+                                        <% if (listing.sustainabilityChecklist) { %>
+                                            <div class="d-flex flex-wrap gap-1 mt-1">
+                                                <% const sustainLabels = {
+                                                    hasSolar: "Solar",
+                                                    wasteSegregation: "Waste",
+                                                    rainwaterHarvesting: "Rainwater",
+                                                    energyEfficientAppliances: "Energy Eff.",
+                                                    publicTransportAccess: "Public Transport",
+                                                    waterSavingFixtures: "Water Saving"
+                                                }; %>
+                                                <% for (let [key, label] of Object.entries(sustainLabels)) { %>
+                                                    <% if (listing.sustainabilityChecklist[key]) { %>
+                                                        <span class="badge text-bg-success" style="font-size:0.65rem">
+                                                            <%= label %>
+                                                        </span>
+                                                    <% } %>
+                                                <% } %>
+                                            </div>
+                                        <% } %>
+                                </div>
+                            </div>
+                        </a>
+
+                        <% } %>
+
+                </div>
+
+    </body>
+
+    <script>
+        // Ensure checkout is always after checkin
+        const checkInInput = document.getElementById("checkIn");
+        const checkOutInput = document.getElementById("checkOut");
+        const todayStr = "<%= todayISO %>";
+        checkInInput.min = todayStr;
+        checkOutInput.min = todayStr;
+        checkInInput.addEventListener("change", function () {
+            if (checkOutInput.value && checkOutInput.value <= checkInInput.value) {
+                checkOutInput.value = "";
+            }
+            checkOutInput.min = checkInInput.value || todayStr;
+        });
+    </script>

@@ -1,0 +1,44 @@
+<% layout("/layouts/boilerplate")%>
+
+<div class="row mt-4 mb-5">
+    <div class="col-lg-10 offset-lg-1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="mb-1">Owner Calendar</h1>
+                <p class="text-muted mb-0">Pending and accepted stays across your listings.</p>
+            </div>
+            <a href="/owner/bookings" class="btn btn-outline-secondary">Booking Requests</a>
+        </div>
+
+        <% if (!bookings.length) { %>
+            <p class="text-muted">No upcoming booking dates yet.</p>
+        <% } else { %>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Listing</th>
+                            <th>Guest</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let booking of bookings) { %>
+                            <tr>
+                                <td><%= booking.listing ? booking.listing.title : (booking.listingTitle || "Property") %></td>
+                                <td><%= booking.guest ? booking.guest.username : "Guest" %></td>
+                                <td><%= booking.checkIn.toLocaleDateString("en-IN") %></td>
+                                <td><%= booking.checkOut.toLocaleDateString("en-IN") %></td>
+                                <td>
+                                    <span class="badge text-bg-<%= booking.status === "accepted" ? "success" : "warning" %>"><%= booking.status %></span>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+    </div>
+</div>

@@ -1,0 +1,163 @@
+<% layout("/layouts/boilerplate")%>
+
+<div class="row mt-4 mb-5">
+    <div class="col-lg-10 offset-lg-1">
+        <h1 class="mb-4">My Bookings</h1>
+
+        <%# ---- UPCOMING BOOKINGS ---- %>
+        <h4 class="mb-3">Upcoming &amp; Active</h4>
+        <% if (upcomingBookings.length === 0) { %>
+            <p class="text-muted mb-4">No upcoming bookings.</p>
+        <% } else { %>
+            <div class="table-responsive mb-5">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Guests</th>
+                            <th>Price/night</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let booking of upcomingBookings) { %>
+                            <% const propertyName = booking.listing ? booking.listing.title : (booking.listingTitle || "Property"); %>
+                            <% const totalPrice = booking.totalPrice || ((booking.pricePerNight || (booking.listing ? booking.listing.price : 0)) * booking.nights); %>
+                            <% const pricePerNight = booking.pricePerNight || (booking.listing ? booking.listing.price : 0); %>
+                            <tr>
+                                <td><%= propertyName %></td>
+                                <td><%= booking.checkIn.toLocaleDateString("en-IN") %></td>
+                                <td><%= booking.checkOut.toLocaleDateString("en-IN") %></td>
+                                <td><%= booking.guestCount || 1 %></td>
+                                <td>&#8377; <%= pricePerNight.toLocaleString("en-IN") %></td>
+                                <td>&#8377; <%= totalPrice.toLocaleString("en-IN") %></td>
+                                <td>
+                                    <span class="badge text-bg-<%= booking.status === 'accepted' ? 'success' : booking.status === 'rejected' || booking.status === 'cancelled' ? 'danger' : 'warning' %>">
+                                        <%= booking.status %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <% if (booking.status === "pending") { %>
+                                        <form action="/bookings/<%= booking._id %>/cancel" method="POST">
+                                            <button class="btn btn-sm btn-outline-danger" type="submit">Cancel</button>
+                                        </form>
+                                    <% } else if (booking.status === "accepted" && booking.owner) { %>
+                                        <button
+                                            class="btn btn-sm btn-outline-success"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#ownerDetails-<%= booking._id %>"
+                                        >
+                                            Show Owner Details
+                                        </button>
+                                        <div class="collapse mt-2" id="ownerDetails-<%= booking._id %>">
+                                            <div class="card card-body p-2" style="font-size:0.88rem;">
+                                                <p class="mb-1">👤 <strong><%= booking.owner.username %></strong></p>
+                                                <p class="mb-1">📧 <%= booking.owner.email %></p>
+                                                <% if (booking.owner.phoneNumber) { %>
+                                                    <p class="mb-0">📞 <%= booking.owner.phoneNumber %></p>
+                                                <% } else { %>
+                                                    <p class="mb-0 text-muted">No phone number provided.</p>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+
+        <%# ---- PAST BOOKINGS ---- %>
+        <h4 class="mb-3">Past Bookings</h4>
+        <% if (pastBookings.length === 0) { %>
+            <p class="text-muted">No past bookings yet.</p>
+        <% } else { %>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Guests</th>
+                            <th>Price/night</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Reviews</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let booking of pastBookings) { %>
+                            <% const propertyName = booking.listing ? booking.listing.title : (booking.listingTitle || "Property"); %>
+                            <% const totalPrice = booking.totalPrice || ((booking.pricePerNight || (booking.listing ? booking.listing.price : 0)) * booking.nights); %>
+                            <% const pricePerNight = booking.pricePerNight || (booking.listing ? booking.listing.price : 0); %>
+                            <% const stayComplete = booking.checkOut <= new Date(); %>
+                            <% const canRateWomenSafety = currUser && currUser.gender === "female" && booking.status === "accepted" && stayComplete && booking.listing && booking.listing.status === "approved" && !booking.womenSafetyRating; %>
+                            <% const canReviewProperty = booking.status === "accepted" && stayComplete && booking.listing && booking.listing.status === "approved" && !booking.propertyReview; %>
+                            <tr>
+                                <td><%= propertyName %></td>
+                                <td><%= booking.checkIn.toLocaleDateString("en-IN") %></td>
+                                <td><%= booking.checkOut.toLocaleDateString("en-IN") %></td>
+                                <td><%= booking.guestCount || 1 %></td>
+                                <td>&#8377; <%= pricePerNight.toLocaleString("en-IN") %></td>
+                                <td>&#8377; <%= totalPrice.toLocaleString("en-IN") %></td>
+                                <td>
+                                    <span class="badge text-bg-<%= booking.status === 'accepted' ? 'success' : booking.status === 'rejected' || booking.status === 'cancelled' ? 'danger' : 'warning' %>">
+                                        <%= booking.status %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <% if (canRateWomenSafety) { %>
+                                        <form action="/bookings/<%= booking._id %>/women-safety-rating" method="POST" class="compact-rating-form">
+                                            <select class="form-select form-select-sm rating-select" name="rating" aria-label="Women safety rating" required>
+                                                <option value="">Women safety</option>
+                                                <% for (let rating = 1; rating <= 5; rating++) { %>
+                                                    <option value="<%= rating %>"><%= rating %> star<%= rating > 1 ? "s" : "" %></option>
+                                                <% } %>
+                                            </select>
+                                            <div class="rating-tag-grid">
+                                                <label><input type="checkbox" name="tags[lighting]"> Lighting</label>
+                                                <label><input type="checkbox" name="tags[hostBehavior]"> Host</label>
+                                                <label><input type="checkbox" name="tags[neighborhood]"> Neighborhood</label>
+                                                <label><input type="checkbox" name="tags[privacy]"> Privacy</label>
+                                                <label><input type="checkbox" name="tags[transportAccess]"> Transport</label>
+                                            </div>
+                                            <button class="btn btn-sm btn-outline-dark" type="submit">Rate safety</button>
+                                        </form>
+                                    <% } else if (booking.womenSafetyRating) { %>
+                                        <span class="rating-stars d-block" aria-label="Your women safety rating">
+                                            <%= "★".repeat(booking.womenSafetyRating) %><%= "☆".repeat(5 - booking.womenSafetyRating) %>
+                                        </span>
+                                    <% } %>
+
+                                    <% if (canReviewProperty) { %>
+                                        <form action="/listings/<%= booking.listing._id %>/reviews" method="POST" class="compact-rating-form mt-2">
+                                            <input type="hidden" name="bookingId" value="<%= booking._id %>">
+                                            <select class="form-select form-select-sm rating-select" name="rating" aria-label="Property rating" required>
+                                                <option value="">Property review</option>
+                                                <% for (let rating = 1; rating <= 5; rating++) { %>
+                                                    <option value="<%= rating %>"><%= rating %> star<%= rating > 1 ? "s" : "" %></option>
+                                                <% } %>
+                                            </select>
+                                            <input class="form-control form-control-sm" type="text" name="comment" placeholder="Optional comment">
+                                            <button class="btn btn-sm btn-outline-dark" type="submit">Review</button>
+                                        </form>
+                                    <% } else if (booking.propertyReview) { %>
+                                        <span class="text-muted small">Reviewed ✓</span>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+    </div>
+</div>

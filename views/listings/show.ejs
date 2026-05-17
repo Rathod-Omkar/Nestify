@@ -1,0 +1,247 @@
+<% layout("/layouts/boilerplate")%>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<div class="row mt-4 mb-5">
+    <div class="col-lg-8 offset-lg-2">
+        <h1 class="show-title"><%= listing.title %></h1>
+
+        <% if (listing.status === "pending") { %>
+            <div class="alert alert-warning">This listing is waiting for admin review.</div>
+        <% } else if (listing.status === "rejected") { %>
+            <div class="alert alert-danger">This listing was rejected by admin. <%= listing.rejectionReason ? "Reason: " + listing.rejectionReason : "" %></div>
+        <% } %>
+
+        <%# Image Carousel %>
+        <% if (allImages.length > 1) { %>
+            <div id="listingCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <% for (let i = 0; i < allImages.length; i++) { %>
+                        <button type="button" data-bs-target="#listingCarousel" data-bs-slide-to="<%= i %>" class="<%= i === 0 ? 'active' : '' %>" aria-label="Slide <%= i+1 %>"></button>
+                    <% } %>
+                </div>
+                <div class="carousel-inner" style="border-radius:12px;overflow:hidden;">
+                    <% for (let i = 0; i < allImages.length; i++) { %>
+                        <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                            <img src="<%= allImages[i].url %>" class="d-block w-100 show-img" alt="Listing image <%= i+1 %>" style="object-fit:cover;max-height:420px;">
+                        </div>
+                    <% } %>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#listingCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#listingCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            <%# Thumbnail strip %>
+            <div class="d-flex gap-2 mb-3 overflow-auto pb-1">
+                <% for (let i = 0; i < allImages.length; i++) { %>
+                    <img
+                        src="<%= allImages[i].url %>"
+                        alt="thumb"
+                        onclick="bootstrap.Carousel.getOrCreateInstance(document.getElementById('listingCarousel')).to(<%= i %>)"
+                        style="width:72px;height:54px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;flex-shrink:0;"
+                        class="listing-thumb"
+                    >
+                <% } %>
+            </div>
+        <% } else { %>
+            <img src="<%= listing.image.url %>" alt="<%= listing.image.filename || listing.title %>" class="show-img">
+        <% } %>
+
+        <div class="show-details mt-4">
+            <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                <h5 class="mb-0"><%= listing.location %>, <%= listing.country %></h5>
+                <span class="badge <%= listing.category === 'shared' ? 'text-bg-primary' : 'text-bg-secondary' %>">
+                    <%= listing.category === 'shared' ? '🤝 Co-Nest' : '🏠 Normal' %>
+                </span>
+            </div>
+            <p class="text-muted mb-0">&#8377; <%= listing.price.toLocaleString("en-IN") %> / night</p>
+            <p class="text-muted mb-0">👥 Max guests: <strong><%= listing.maxGuests || 1 %></strong></p>
+
+            <p class="show-description mt-3"><%= listing.description %></p>
+
+            <%# Meals info (display only) %>
+            <% const hasMeals = listing.meals && ((listing.meals.types && listing.meals.types.length) || (listing.meals.options && listing.meals.options.length)); %>
+            <% if (hasMeals) { %>
+                <div class="alert alert-success d-flex align-items-start gap-2 py-2 mb-3">
+                    <span style="font-size:1.3rem;">🍽️</span>
+                    <div>
+                        <strong>Meals Available</strong>
+                        <div class="d-flex flex-wrap gap-1 mt-1">
+                            <% const mealTypeLabels = {veg: '🥦 Veg', nonveg: '🍗 Non-Veg'}; %>
+                            <% const mealOptionLabels = {breakfast: '🌅 Breakfast', lunch: '☀️ Lunch', dinner: '🌙 Dinner'}; %>
+                            <% if (listing.meals.types) { for (let t of listing.meals.types) { %><span class="badge text-bg-light border"><%= mealTypeLabels[t] || t %></span><% } } %>
+                            <% if (listing.meals.options) { for (let o of listing.meals.options) { %><span class="badge text-bg-light border"><%= mealOptionLabels[o] || o %></span><% } } %>
+                        </div>
+                        <p class="mb-0 mt-1 small text-muted">Meals are not included with booking. Please confirm with the host.</p>
+                    </div>
+                </div>
+            <% } %>
+
+            <% const womenSafetyAverage = listing.womenSafetyRating && listing.womenSafetyRating.average ? listing.womenSafetyRating.average : 0; %>
+            <% const womenSafetyRating = Math.round(womenSafetyAverage); %>
+            <% const womenSafetyCount = listing.womenSafetyRating && listing.womenSafetyRating.count ? listing.womenSafetyRating.count : 0; %>
+            <% const reviewAverage = listing.reviewRating && listing.reviewRating.average ? listing.reviewRating.average : 0; %>
+            <% const reviewRating = Math.round(reviewAverage); %>
+            <% const reviewCount = listing.reviewRating && listing.reviewRating.count ? listing.reviewRating.count : 0; %>
+            <div class="listing-ratings mt-3">
+                <div>
+                    <span class="rating-label">Women safety</span>
+                    <span class="rating-stars"><%= "★".repeat(womenSafetyRating) %><%= "☆".repeat(5 - womenSafetyRating) %></span>
+                    <span class="text-muted">(<%= womenSafetyCount %>)</span>
+                </div>
+                <div>
+                    <span class="rating-label">Property reviews</span>
+                    <span class="rating-stars"><%= "★".repeat(reviewRating) %><%= "☆".repeat(5 - reviewRating) %></span>
+                    <span class="text-muted">(<%= reviewCount %>)</span>
+                </div>
+            </div>
+
+            <% const checklistLabels = {hasSolar: "Solar", wasteSegregation: "Waste segregation", rainwaterHarvesting: "Rainwater harvesting", energyEfficientAppliances: "Efficient appliances", publicTransportAccess: "Public transport", waterSavingFixtures: "Water saving fixtures"}; %>
+            <div class="d-flex flex-wrap gap-2 mb-3 mt-2">
+                <% for (let field of Object.keys(checklistLabels)) { %>
+                    <% if (listing.sustainabilityChecklist && listing.sustainabilityChecklist[field]) { %>
+                        <span class="badge text-bg-success"><%= checklistLabels[field] %></span>
+                    <% } %>
+                <% } %>
+            </div>
+
+            <% if (listing.UserID) { %>
+                <p class="text-muted mb-0">Listed by <%= listing.UserID.username %></p>
+            <% } %>
+
+            <% const isListingOwner = currUser && listing.UserID && listing.UserID._id.equals(currUser._id); %>
+            <% if (bookingError) { %>
+                <div class="alert alert-danger mt-4"><%= bookingError %></div>
+            <% } %>
+
+            <% if (userBooking) { %>
+                <div class="alert alert-warning mt-4">
+                    <div class="d-flex justify-content-between align-items-center gap-3">
+                        <span>Your booking request for this property is pending.</span>
+                        <form action="/bookings/<%= userBooking._id %>/cancel" method="POST">
+                            <button class="btn btn-outline-danger btn-sm" type="submit">Cancel Request</button>
+                        </form>
+                    </div>
+                </div>
+            <% } %>
+
+            <% if (currUser && !currAdmin && listing.status === "approved" && !isListingOwner && !userBooking) { %>
+                <form action="/listings/<%= listing._id %>/bookings" method="POST" class="mt-4" id="bookingForm">
+                    <h5 class="mb-3">Request a Booking</h5>
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="checkIn">Check-in</label>
+                            <input type="text" name="booking[checkIn]" id="checkIn" class="form-control" required>
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="checkOut">Check-out</label>
+                            <input type="text" name="booking[checkOut]" id="checkOut" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label" for="guestCount">Number of Guests</label>
+                        <input type="number" name="booking[guestCount]" id="guestCount" min="1" max="<%= listing.maxGuests || 50 %>" value="1" class="form-control" required>
+                        <div class="form-text">Max allowed: <strong><%= listing.maxGuests || 1 %></strong></div>
+                    </div>
+                    <p class="text-danger d-none" id="bookingDateError">Selected dates include a booked or requested date.</p>
+                    <button type="submit" class="btn btn-dark">Request Booking</button>
+                </form>
+            <% } %>
+
+            <% const canManageListing = currAdmin || (currUser && listing.UserID && listing.UserID._id.equals(currUser._id)); %>
+            <% if (canManageListing) { %>
+                <div class="show-actions mt-4">
+                    <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark">Edit</a>
+                    <form action="/listings/<%= listing._id %>?_method=DELETE" method="post">
+                        <button class="btn btn-outline-danger" type="submit">Delete</button>
+                    </form>
+                </div>
+            <% } %>
+
+            <div class="mt-5">
+                <h3 class="mb-3">Property Reviews</h3>
+                <% if (!reviews.length) { %>
+                    <p class="text-muted">No property reviews yet.</p>
+                <% } else { %>
+                    <% for (let review of reviews) { %>
+                        <div class="border-bottom py-3">
+                            <div class="d-flex justify-content-between gap-3">
+                                <strong><%= review.user ? review.user.username : "Guest" %></strong>
+                                <span class="rating-stars"><%= "★".repeat(review.rating) %><%= "☆".repeat(5 - review.rating) %></span>
+                            </div>
+                            <% if (review.comment) { %>
+                                <p class="mb-0 mt-2"><%= review.comment %></p>
+                            <% } %>
+                        </div>
+                    <% } %>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% if (currUser && !currAdmin && listing.status === "approved" && !isListingOwner && !userBooking) { %>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        const unavailableDates = <%- JSON.stringify(unavailableDates) %>;
+        const unavailableDateSet = new Set(unavailableDates);
+        const checkInInput = document.getElementById("checkIn");
+        const checkOutInput = document.getElementById("checkOut");
+        const bookingForm = document.getElementById("bookingForm");
+        const bookingDateError = document.getElementById("bookingDateError");
+
+        function selectedRangeHasUnavailableDate(checkIn, checkOut) {
+            const currentDate = new Date(`${checkIn}T00:00:00`);
+            const endDate = new Date(`${checkOut}T00:00:00`);
+
+            while (currentDate < endDate) {
+                const dateValue = currentDate.toISOString().split("T")[0];
+                if (unavailableDateSet.has(dateValue)) {
+                    return true;
+                }
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            return false;
+        }
+
+        const checkOutPicker = flatpickr(checkOutInput, {
+            dateFormat: "Y-m-d",
+            minDate: "<%= today %>",
+            disable: unavailableDates,
+        });
+
+        flatpickr(checkInInput, {
+            dateFormat: "Y-m-d",
+            minDate: "<%= today %>",
+            disable: unavailableDates,
+            onChange: function(selectedDates, dateStr) {
+                if (!dateStr) {
+                    return;
+                }
+
+                const minCheckoutDate = new Date(`${dateStr}T00:00:00`);
+                minCheckoutDate.setDate(minCheckoutDate.getDate() + 1);
+                checkOutPicker.set("minDate", minCheckoutDate);
+                checkOutPicker.clear();
+            },
+        });
+
+        bookingForm.addEventListener("submit", function(event) {
+            const checkIn = checkInInput.value;
+            const checkOut = checkOutInput.value;
+            const invalidRange = !checkIn || !checkOut || checkOut <= checkIn || selectedRangeHasUnavailableDate(checkIn, checkOut);
+
+            bookingDateError.classList.toggle("d-none", !invalidRange);
+
+            if (invalidRange) {
+                event.preventDefault();
+            }
+        });
+    </script>
+<% } %>

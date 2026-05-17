@@ -1,0 +1,126 @@
+<% layout("/layouts/boilerplate")%>
+
+<div class="row mt-4 mb-5">
+    <div class="col-lg-10 offset-lg-1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Booking Requests</h1>
+            <a href="/owner/calendar" class="btn btn-outline-secondary">Calendar View</a>
+        </div>
+
+        <h3 class="mb-3">Pending Requests</h3>
+        <% if (pendingBookings.length === 0) { %>
+            <p class="text-muted">No pending booking requests.</p>
+        <% } else { %>
+            <div class="table-responsive mb-5">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Guest</th>
+                            <th>Guests #</th>
+                            <th>In Date</th>
+                            <th>Out Date</th>
+                            <th>Price</th>
+                            <th>Total Price</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let booking of pendingBookings) { %>
+                            <% const propertyName = booking.listing ? booking.listing.title : (booking.listingTitle || "Property"); %>
+                            <% const totalPrice = booking.totalPrice || ((booking.pricePerNight || (booking.listing ? booking.listing.price : 0)) * booking.nights); %>
+                            <% const pricePerNight = booking.pricePerNight || (booking.listing ? booking.listing.price : (booking.nights ? Math.round(totalPrice / booking.nights) : 0)); %>
+                            <tr>
+                                <td><%= propertyName %></td>
+                                <td><%= booking.guest ? booking.guest.username : "Guest" %></td>
+                                <td><%= booking.guestCount || 1 %></td>
+                                <td><%= booking.checkIn.toLocaleDateString("en-IN") %></td>
+                                <td><%= booking.checkOut.toLocaleDateString("en-IN") %></td>
+                                <td>&#8377; <%= pricePerNight.toLocaleString("en-IN") %></td>
+                                <td>&#8377; <%= totalPrice.toLocaleString("en-IN") %></td>
+                                <td>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        <form action="/owner/bookings/<%= booking._id %>/accept" method="POST">
+                                            <button class="btn btn-sm btn-success" type="submit">Accept</button>
+                                        </form>
+                                        <form action="/owner/bookings/<%= booking._id %>/reject" method="POST">
+                                            <button class="btn btn-sm btn-outline-danger" type="submit">Reject</button>
+                                        </form>
+                                        <% if (booking.listing) { %>
+                                            <a href="/listings/<%= booking.listing._id %>" class="btn btn-sm btn-outline-secondary">View</a>
+                                        <% } %>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+
+        <h3 class="mb-3">Booking History</h3>
+        <% if (bookingHistory.length === 0) { %>
+            <p class="text-muted">No accepted or rejected bookings yet.</p>
+        <% } else { %>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Guest</th>
+                            <th>Guests #</th>
+                            <th>In Date</th>
+                            <th>Out Date</th>
+                            <th>Price</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                            <th>Guest Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let booking of bookingHistory) { %>
+                            <% const propertyName = booking.listing ? booking.listing.title : (booking.listingTitle || "Property"); %>
+                            <% const totalPrice = booking.totalPrice || ((booking.pricePerNight || (booking.listing ? booking.listing.price : 0)) * booking.nights); %>
+                            <% const pricePerNight = booking.pricePerNight || (booking.listing ? booking.listing.price : (booking.nights ? Math.round(totalPrice / booking.nights) : 0)); %>
+                            <tr>
+                                <td><%= propertyName %></td>
+                                <td><%= booking.guest ? booking.guest.username : "Guest" %></td>
+                                <td><%= booking.guestCount || 1 %></td>
+                                <td><%= booking.checkIn.toLocaleDateString("en-IN") %></td>
+                                <td><%= booking.checkOut.toLocaleDateString("en-IN") %></td>
+                                <td>&#8377; <%= pricePerNight.toLocaleString("en-IN") %></td>
+                                <td>&#8377; <%= totalPrice.toLocaleString("en-IN") %></td>
+                                <td>
+                                    <span class="badge text-bg-<%= booking.status === 'accepted' ? 'success' : 'danger' %>">
+                                        <%= booking.status %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <% if (booking.status === "accepted" && booking.guest) { %>
+                                        <button
+                                            class="btn btn-sm btn-outline-primary"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#guestDetails-<%= booking._id %>"
+                                        >
+                                            Show Details
+                                        </button>
+                                        <div class="collapse mt-2" id="guestDetails-<%= booking._id %>">
+                                            <div class="card card-body p-2" style="font-size:0.88rem;">
+                                                <p class="mb-1">👤 <strong><%= booking.guest.username %></strong></p>
+                                                <p class="mb-1">📧 <%= booking.guest.email %></p>
+                                                <p class="mb-0">⚧ <%= booking.guest.gender || "Not specified" %></p>
+                                            </div>
+                                        </div>
+                                    <% } else { %>
+                                        <span class="text-muted small">—</span>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+    </div>
+</div>

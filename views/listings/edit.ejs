@@ -1,0 +1,158 @@
+<% layout("/layouts/boilerplate")%>
+
+<div class="row mt-4 mb-5">
+    <div class="col-lg-8 offset-lg-2">
+        <h2 class="mb-4">Edit Listing</h2>
+
+        <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label" for="title">Title</label>
+                <input type="text" name="listing[title]" id="title" value="<%= listing.title %>" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea name="listing[description]" id="description" class="form-control" rows="4" required><%= listing.description %></textarea>
+            </div>
+
+            <%# Category %>
+            <div class="mb-3">
+                <label class="form-label">Listing Category</label>
+                <div class="d-flex gap-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="listing[category]" id="catNormal" value="normal" <%= (!listing.category || listing.category === 'normal') ? 'checked' : '' %>>
+                        <label class="form-check-label" for="catNormal">🏠 Normal (Private / Standalone)</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="listing[category]" id="catShared" value="shared" <%= listing.category === 'shared' ? 'checked' : '' %>>
+                        <label class="form-check-label" for="catShared">🤝 Co-Nest (Shared / Co-living)</label>
+                    </div>
+                </div>
+            </div>
+
+            <%# Max Guests %>
+            <div class="mb-3">
+                <label class="form-label" for="maxGuests">Max Guests Allowed</label>
+                <input type="number" name="listing[maxGuests]" id="maxGuests" min="1" max="50" value="<%= listing.maxGuests || 1 %>" class="form-control" required>
+            </div>
+
+            <%# Meals offered %>
+            <div class="mb-3">
+                <label class="form-label">Meals Offered <span class="text-muted">(optional)</span></label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-1 fw-semibold small">Meal Type</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="mealTypes" id="mealVeg" value="veg" <%= listing.meals && listing.meals.types && listing.meals.types.includes('veg') ? 'checked' : '' %>>
+                            <label class="form-check-label" for="mealVeg">🥦 Vegetarian</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="mealTypes" id="mealNonveg" value="nonveg" <%= listing.meals && listing.meals.types && listing.meals.types.includes('nonveg') ? 'checked' : '' %>>
+                            <label class="form-check-label" for="mealNonveg">🍗 Non-Vegetarian</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1 fw-semibold small">Meal Times</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="mealOptions" id="mealBreakfast" value="breakfast" <%= listing.meals && listing.meals.options && listing.meals.options.includes('breakfast') ? 'checked' : '' %>>
+                            <label class="form-check-label" for="mealBreakfast">🌅 Breakfast</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="mealOptions" id="mealLunch" value="lunch" <%= listing.meals && listing.meals.options && listing.meals.options.includes('lunch') ? 'checked' : '' %>>
+                            <label class="form-check-label" for="mealLunch">☀️ Lunch</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="mealOptions" id="mealDinner" value="dinner" <%= listing.meals && listing.meals.options && listing.meals.options.includes('dinner') ? 'checked' : '' %>>
+                            <label class="form-check-label" for="mealDinner">🌙 Dinner</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <%# Existing Images with remove option %>
+            <% const existingImages = listing.images && listing.images.length ? listing.images : (listing.image ? [listing.image] : []); %>
+            <% if (existingImages.length > 0) { %>
+                <div class="mb-3">
+                    <label class="form-label">Current Images <span class="text-muted small">(check to remove)</span></label>
+                    <div class="d-flex flex-wrap gap-2">
+                        <% for (let img of existingImages) { %>
+                            <div class="position-relative" style="width:110px;">
+                                <img src="<%= img.url %>" alt="listing image" style="width:110px;height:80px;object-fit:cover;border-radius:8px;border:2px solid #dee2e6;">
+                                <div class="form-check position-absolute top-0 start-0 m-1">
+                                    <input
+                                        class="form-check-input remove-img-checkbox"
+                                        type="checkbox"
+                                        name="removeImages"
+                                        id="rm-<%= img.filename %>"
+                                        value="<%= img.filename %>"
+                                        style="background-color:white;"
+                                    >
+                                </div>
+                                <label for="rm-<%= img.filename %>" class="remove-img-label" title="Check to remove"></label>
+                            </div>
+                        <% } %>
+                    </div>
+                    <div class="form-text text-danger">Checked images will be removed on save.</div>
+                </div>
+            <% } %>
+
+            <%# Add new images %>
+            <div class="mb-3">
+                <label class="form-label" for="listingImages">Add More Images <span class="text-muted">(optional)</span></label>
+                <input type="file" name="listingImages" id="listingImages" accept="image/*" class="form-control" multiple>
+            </div>
+
+            <div class="row">
+                <div class="mb-3 col-md-4">
+                    <label class="form-label" for="price">Price</label>
+                    <input type="number" name="listing[price]" id="price" value="<%= listing.price %>" class="form-control" required>
+                </div>
+
+                <div class="mb-3 col-md-8">
+                    <label class="form-label" for="location">Location</label>
+                    <input type="text" name="listing[location]" id="location" value="<%= listing.location %>" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label" for="country">Country</label>
+                <input type="text" name="listing[country]" id="country" value="<%= listing.country %>" class="form-control" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Sustainability Checklist</label>
+                <div class="row">
+                    <% const labels = {hasSolar: "Solar power", wasteSegregation: "Waste segregation", rainwaterHarvesting: "Rainwater harvesting", energyEfficientAppliances: "Energy efficient appliances", publicTransportAccess: "Public transport access", waterSavingFixtures: "Water saving fixtures"}; %>
+                    <% for (let field of sustainabilityFields) { %>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="sustainability[<%= field %>]" id="<%= field %>" <%= listing.sustainabilityChecklist && listing.sustainabilityChecklist[field] ? "checked" : "" %>>
+                                <label class="form-check-label" for="<%= field %>"><%= labels[field] %></label>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="d-flex gap-3">
+                <button type="submit" class="btn btn-dark">Update Listing</button>
+                <a href="/listings/<%= listing._id %>" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.remove-img-checkbox:checked ~ img,
+.remove-img-checkbox:checked + label {
+    opacity: 0.4;
+}
+</style>
+<script>
+document.querySelectorAll(".remove-img-checkbox").forEach(function(cb) {
+    cb.addEventListener("change", function() {
+        const img = this.closest("div").querySelector("img");
+        if (img) img.style.opacity = this.checked ? "0.35" : "1";
+    });
+});
+</script>

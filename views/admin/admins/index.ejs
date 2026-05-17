@@ -1,0 +1,49 @@
+<% layout("/layouts/boilerplate")%>
+
+<div class="row mt-4 mb-5">
+    <div class="col-lg-10 offset-lg-1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Admins</h1>
+            <% if (currAdmin.role === "super-admin") { %>
+                <a href="/admin/admins/new" class="btn btn-dark">Add Admin</a>
+            <% } %>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <% if (currAdmin.role === "super-admin") { %>
+                            <th>Action</th>
+                        <% } %>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (let admin of admins) { %>
+                        <tr>
+                            <td><%= admin.username %></td>
+                            <td><%= admin.email %></td>
+                            <td><%= admin.role %></td>
+                            <% if (currAdmin.role === "super-admin") { %>
+                                <td>
+                                    <% if (admin.role === "admin") { %>
+                                        <form action="/admin/admins/<%= admin._id %>?_method=DELETE" method="POST">
+                                            <button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
+                                        </form>
+                                    <% } else { %>
+                                        <span class="text-muted">Protected</span>
+                                    <% } %>
+                                </td>
+                            <% } %>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <a href="/admin" class="btn btn-outline-secondary">Back to Dashboard</a>
+    </div>
+</div>

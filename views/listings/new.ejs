@@ -1,0 +1,139 @@
+<% layout("/layouts/boilerplate")%>
+<body>
+    <div class="row">
+        <div class="col-8 offset-2">
+
+            <br><br>
+    <h2>Create new Listing</h2>
+    <form action="/listings" method="POST" enctype="multipart/form-data">
+
+        <div class="mb-3">
+        <label class="form-label" for="title">Enter Title </label>
+        <input type="text" name="listing[title]" placeholder="title" class="form-control" required="true">
+        </div>
+
+        <div class="mb-3">
+        <label class="form-label" for="description">Enter Description </label>
+        <textarea name="listing[description]" placeholder="A cozy house." class="form-control" required="true"></textarea>
+        </div>
+
+        <%# Category %>
+        <div class="mb-3">
+            <label class="form-label">Listing Category</label>
+            <div class="d-flex gap-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="listing[category]" id="catNormal" value="normal" checked>
+                    <label class="form-check-label" for="catNormal">🏠 Normal (Private / Standalone)</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="listing[category]" id="catShared" value="shared">
+                    <label class="form-check-label" for="catShared">🤝 Co-Nest (Shared / Co-living)</label>
+                </div>
+            </div>
+        </div>
+
+        <%# Multiple Images %>
+        <div class="mb-3">
+            <label class="form-label" for="listingImages">Upload Listing Images <span class="text-muted">(you can select multiple)</span></label>
+            <input type="file" name="listingImages" id="listingImages" accept="image/*" class="form-control" multiple required>
+            <div class="form-text">First image will be the cover photo.</div>
+        </div>
+
+        <%# Max Guests %>
+        <div class="mb-3">
+            <label class="form-label" for="maxGuests">Max Guests Allowed</label>
+            <input type="number" name="listing[maxGuests]" id="maxGuests" min="1" max="50" value="1" class="form-control" required>
+        </div>
+
+        <%# Meals offered %>
+        <div class="mb-3">
+            <label class="form-label">Meals Offered <span class="text-muted">(optional)</span></label>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-1 fw-semibold small">Meal Type</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="mealTypes" id="mealVeg" value="veg">
+                        <label class="form-check-label" for="mealVeg">🥦 Vegetarian</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="mealTypes" id="mealNonveg" value="nonveg">
+                        <label class="form-check-label" for="mealNonveg">🍗 Non-Vegetarian</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-1 fw-semibold small">Meal Times</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="mealOptions" id="mealBreakfast" value="breakfast">
+                        <label class="form-check-label" for="mealBreakfast">🌅 Breakfast</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="mealOptions" id="mealLunch" value="lunch">
+                        <label class="form-check-label" for="mealLunch">☀️ Lunch</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="mealOptions" id="mealDinner" value="dinner">
+                        <label class="form-check-label" for="mealDinner">🌙 Dinner</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+        <label class="form-label" for="aadharCard">Upload Aadhar Card</label>
+        <input type="file" name="aadharCard" id="aadharCard" accept="image/*,application/pdf" class="form-control" required="true">
+        </div>
+
+        <div class="mb-3">
+        <label class="form-label" for="electricityBill">Upload Electricity Bill</label>
+        <input type="file" name="electricityBill" id="electricityBill" accept="image/*,application/pdf" class="form-control" required="true">
+        </div>
+
+        <div class="mb-3">
+        <label class="form-label" for="salesDeed">Upload Sales Deed Optional</label>
+        <input type="file" name="salesDeed" id="salesDeed" accept="image/*,application/pdf" class="form-control">
+        </div>
+
+        <div class="mb-3">
+        <label class="form-label" for="sustainabilityEvidence">Sustainability Evidence Optional</label>
+        <input type="file" name="sustainabilityEvidence" id="sustainabilityEvidence" accept="image/*,application/pdf" class="form-control" multiple>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label">Sustainability Checklist</label>
+            <div class="row">
+                <% const labels = {hasSolar: "Solar power", wasteSegregation: "Waste segregation", rainwaterHarvesting: "Rainwater harvesting", energyEfficientAppliances: "Energy efficient appliances", publicTransportAccess: "Public transport access", waterSavingFixtures: "Water saving fixtures"}; %>
+                <% for (let field of sustainabilityFields) { %>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="sustainability[<%= field %>]" id="<%= field %>">
+                            <label class="form-check-label" for="<%= field %>"><%= labels[field] %></label>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        
+        <div class="row">
+        <div class="mb-3 col-md-4">
+        <label class="form-label" for="price">Enter Price </label>
+       <input type="number" name="listing[price]" placeholder="ex.1500" class="form-control" required="true">
+        </div>
+        
+        <div class="mb-3 col-md-6">
+        <label class="form-label" for="location">Enter Location </label>
+        <input type="text" name="listing[location]" placeholder="ex. Pune" class="form-control" required="true">
+        </div>
+        </div>
+       
+    
+        <div class="mb-3">
+        <label class="form-label" for="country">Enter country </label>
+        <input type="text" name="listing[country]" placeholder="ex. India" class="form-control" required="true">
+        </div>
+        
+       <br> <button type="submit" class="btn btn-dark offset-5 mb-3">Submit for Review</button>
+    </form>
+    </div>
+    </div>
+</body>
+</html>

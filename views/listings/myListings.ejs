@@ -1,0 +1,70 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<div class="row mt-4 mb-5">
+    <div class="col-lg-10 offset-lg-1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">My Listings</h1>
+            <a href="/listings/new" class="btn btn-dark">+ Create Listing</a>
+        </div>
+
+        <% if (listings.length === 0) { %>
+            <div class="text-center py-5">
+                <p class="text-muted fs-5">You haven't created any listings yet.</p>
+                <a href="/listings/new" class="btn btn-dark mt-2">Create Your First Listing</a>
+            </div>
+        <% } else { %>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Location</th>
+                            <th>Price/night</th>
+                            <th>Max Guests</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let listing of listings) { %>
+                            <tr>
+                                <td>
+                                    <img
+                                        src="<%= listing.image ? listing.image.url : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6' %>"
+                                        alt="<%= listing.title %>"
+                                        style="width:60px;height:45px;object-fit:cover;border-radius:6px;"
+                                    >
+                                </td>
+                                <td><strong><%= listing.title %></strong></td>
+                                <td>
+                                    <span class="badge <%= listing.category === 'shared' ? 'text-bg-primary' : 'text-bg-secondary' %>">
+                                        <%= listing.category === 'shared' ? 'Co-Nest' : 'Normal' %>
+                                    </span>
+                                </td>
+                                <td><%= listing.location %>, <%= listing.country %></td>
+                                <td>&#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "—" %></td>
+                                <td><%= listing.maxGuests || 1 %></td>
+                                <td>
+                                    <span class="badge text-bg-<%= listing.status === 'approved' ? 'success' : listing.status === 'rejected' ? 'danger' : 'warning' %>">
+                                        <%= listing.status %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a href="/listings/<%= listing._id %>" class="btn btn-sm btn-outline-secondary">View</a>
+                                        <a href="/listings/<%= listing._id %>/edit" class="btn btn-sm btn-outline-dark">Edit</a>
+                                        <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Delete this listing?')">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+    </div>
+</div>

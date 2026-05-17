@@ -1,0 +1,64 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<div class="row mt-4 mb-5">
+    <div class="col-lg-6 offset-lg-3">
+        <h2 class="mb-4">List a New Service</h2>
+
+        <% if (error) { %>
+            <div class="alert alert-danger mb-4"><%= error %></div>
+        <% } %>
+
+        <form action="/services" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label class="form-label" for="name">Provider Name</label>
+                <input type="text" name="service[name]" id="name" class="form-control" placeholder="e.g. John Doe" required>
+                <div class="invalid-feedback">Please enter a provider name.</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="category">Service Category</label>
+                <select name="service[category]" id="category" class="form-select" required>
+                    <option value="" disabled selected>Select service type...</option>
+                    <option value="tour guide">🗺️ Tour Guide</option>
+                    <option value="Driver">🚗 Driver</option>
+                    <option value="House Help">🧹 House Help</option>
+                </select>
+                <div class="invalid-feedback">Please select a service category.</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="phone">Phone Number <span class="text-muted">(must be unique)</span></label>
+                <input type="tel" name="service[phone]" id="phone" class="form-control" placeholder="e.g. +91 98765 43210" required>
+                <div class="invalid-feedback">Please enter a valid phone number.</div>
+                <div class="form-text">This will be shared directly with users requesting services.</div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label" for="photo">Profile Photo</label>
+                <input type="file" name="photo" id="photo" class="form-control" accept="image/*">
+                <div class="form-text">Choose a clean profile-style image.</div>
+            </div>
+
+            <div class="d-flex gap-3">
+                <button type="submit" class="btn btn-dark">List Service</button>
+                <a href="/services" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+(() => {
+  'use strict'
+  const forms = document.querySelectorAll('.needs-validation')
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+      form.classList.add('was-validated')
+    }, false)
+  })
+})()
+</script>

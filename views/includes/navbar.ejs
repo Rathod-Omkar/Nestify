@@ -8,6 +8,9 @@
       <div class="navbar-nav">
         <a class="nav-link" href="/dashboard">Home</a>
         <a class="nav-link" href="/listings">All Listings</a>
+        <% if (currUser) { %>
+          <a class="nav-link" href="/services">Services</a>
+        <% } %>
         <% if (currUser && !currAdmin) { %>
           <a class="nav-link" href="/listings/my-listings">My Listings</a>
           <a class="nav-link" href="/owner/bookings">Booking Requests</a>

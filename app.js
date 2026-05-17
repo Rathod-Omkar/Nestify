@@ -16,6 +16,7 @@ const adminRoutes = require("./routes/admin.js");
 const bookingRoutes = require("./routes/bookings.js");
 const listingRoutes = require("./routes/listings.js");
 const userRoutes = require("./routes/users.js");
+const serviceRoutes = require("./routes/services.js");
 
 const sessionOptions = {
     secret: process.env.SESSION_SECRET,
@@ -104,6 +105,7 @@ app.use("/admin", adminRoutes);
 app.use("/", userRoutes);
 app.use("/", bookingRoutes);
 app.use("/listings", listingRoutes);
+app.use("/services", serviceRoutes);
 
 // Global error handler — catches any error passed via next(err)
 app.use((err, req, res, next) => {
@@ -112,6 +114,6 @@ app.use((err, req, res, next) => {
     res.status(err.status || 500).render("error.ejs", { message });
 });
 
-app.listen(4000, () => {
-    console.log("server is listning to port 4000");
+app.listen(3000, () => {
+    console.log("server is listning to port 3000");
 });

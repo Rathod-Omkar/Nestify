@@ -19,7 +19,7 @@ const upload = multer({
     storage,
     fileFilter: (req, file, cb) => {
         const isListingImage = file.fieldname === "listingImage" || file.fieldname === "listingImages";
-        const isProfileImage = file.fieldname === "profileImage";
+        const isProfileImage = file.fieldname === "profileImage" || file.fieldname === "photo";
         const isDocument = ["aadharCard", "electricityBill", "salesDeed", "sustainabilityEvidence"].includes(file.fieldname);
         const isSupportedDocument = file.mimetype.startsWith("image/") || file.mimetype === "application/pdf";
 

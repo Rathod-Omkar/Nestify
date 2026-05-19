@@ -7,7 +7,9 @@ const wrapAsync = require("../utils/asyncWrapper.js");
 
 router.get("/", isUserLoggedIn, wrapAsync(services.index));
 router.get("/new", isUserLoggedIn, services.newForm);
+router.get("/:id/edit", isUserLoggedIn, wrapAsync(services.editForm));
 router.post("/", isUserLoggedIn, upload.single("photo"), wrapAsync(services.create));
+router.put("/:id", isUserLoggedIn, upload.single("photo"), wrapAsync(services.update));
 router.delete("/:id", isUserLoggedIn, wrapAsync(services.destroy));
 
 module.exports = router;

@@ -30,7 +30,13 @@ function buildListingQuery(req, res) {
 
     if (location) {
         const locationRegex = new RegExp(location.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
-        query.$or = [{location: locationRegex}, {country: locationRegex}, {title: locationRegex}];
+        query.$or = [
+            {location: locationRegex},
+            {city: locationRegex},
+            {state: locationRegex},
+            {country: locationRegex},
+            {title: locationRegex}
+        ];
     }
 
     if (minPrice || maxPrice) {
@@ -71,14 +77,18 @@ function resStatusQuery(res) {
 
 // --- Input validation helper ---
 function validateListing(body) {
-    const {title, description, price, location, country} = body.listing || {};
+    const {title, description, price, location, city, state, country, category, maxGuests} = body.listing || {};
     const errors = [];
 
     if (!title || title.trim().length < 3) errors.push("Title must be at least 3 characters.");
     if (!description || description.trim().length < 10) errors.push("Description must be at least 10 characters.");
     if (!price || isNaN(price) || Number(price) <= 0) errors.push("Price must be a positive number.");
     if (!location || location.trim().length < 2) errors.push("Please enter a valid location.");
+    if (!city || city.trim().length < 2) errors.push("Please enter a valid city.");
+    if (!state || state.trim().length < 2) errors.push("Please enter a valid state.");
     if (!country || country.trim().length < 2) errors.push("Please enter a valid country.");
+    if (category && !["normal", "shared"].includes(category)) errors.push("Invalid listing category.");
+    if (maxGuests && (isNaN(maxGuests) || Number(maxGuests) < 1)) errors.push("Max guests must be at least 1.");
 
     return errors;
 }
@@ -216,6 +226,8 @@ async function update(req, res) {
     listing.description = req.body.listing.description;
     listing.price = req.body.listing.price;
     listing.location = req.body.listing.location;
+    listing.city = req.body.listing.city;
+    listing.state = req.body.listing.state;
     listing.country = req.body.listing.country;
     listing.category = req.body.listing.category || listing.category;
     listing.maxGuests = Number(req.body.listing.maxGuests) || listing.maxGuests;

@@ -29,8 +29,16 @@
                             <option value="">Any</option>
                             <% for (let rating=1; rating <=5; rating++) { %>
                                 <option value="<%= rating %>" <%=Number(filters.womenSafetyRating)===rating ? "selected"
-                                    : "" %>><%= rating %>+</option>
+                                    : "" %>><%= rating %></option>
                                 <% } %>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="category">Listing Type</label>
+                        <select name="category" id="category" class="form-select">
+                            <option value="">Any Type</option>
+                            <option value="normal" <%= filters.category === 'normal' ? 'selected' : '' %>>Private (Normal)</option>
+                            <option value="shared" <%= filters.category === 'shared' ? 'selected' : '' %>>Shared (Co-Nest)</option>
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -95,7 +103,11 @@
                                         Math.round(listing.womenSafetyRating.average) : 0; %>
                                         <p class="card-text"><b>
                                                 <%= listing.title %>
-                                            </b> <br> &#8377; <%= listing.price.toLocaleString("en-IN") %>/night</p>
+                                            </b> <br>
+                                            <span class="text-muted small">
+                                                📍 <%= [listing.location, listing.city, listing.state, listing.country].filter(Boolean).join(', ') %>
+                                            </span> <br>
+                                            &#8377; <%= listing.price.toLocaleString("en-IN") %>/night</p>
                                         <div class="listing-rating-lines">
                                             <span
                                                 class="badge <%= listing.category === 'shared' ? 'text-bg-primary' : 'text-bg-light' %> me-1">

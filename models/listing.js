@@ -43,6 +43,8 @@ const listingSchema = new mongoose.Schema({
     },
     price: Number,
     location: String,
+    city: String,
+    state: String,
     country: String,
     status: {
         type: String,

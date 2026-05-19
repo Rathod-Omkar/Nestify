@@ -2,33 +2,33 @@
 
 <div class="row mt-4 mb-5">
     <div class="col-lg-6 offset-lg-3">
-        <h2 class="mb-4">List a New Service</h2>
+        <h2 class="mb-4">Edit Service Details</h2>
 
         <% if (error) { %>
             <div class="alert alert-danger mb-4"><%= error %></div>
         <% } %>
 
-        <form action="/services" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <form action="/services/<%= service._id %>?_method=PUT" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
             <div class="mb-3">
                 <label class="form-label" for="name">Provider Name</label>
-                <input type="text" name="service[name]" id="name" class="form-control" placeholder="e.g. John Doe" required>
+                <input type="text" name="service[name]" id="name" class="form-control" value="<%= service.name %>" placeholder="e.g. John Doe" required>
                 <div class="invalid-feedback">Please enter a provider name.</div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label" for="category">Service Category</label>
                 <select name="service[category]" id="category" class="form-select" required>
-                    <option value="" disabled selected>Select service type...</option>
-                    <option value="tour guide">🗺️ Tour Guide</option>
-                    <option value="Driver">🚗 Driver</option>
-                    <option value="House Help">🧹 House Help</option>
+                    <option value="" disabled>Select service type...</option>
+                    <option value="tour guide" <%= service.category === 'tour guide' ? 'selected' : '' %>>🗺️ Tour Guide</option>
+                    <option value="Driver" <%= service.category === 'Driver' ? 'selected' : '' %>>🚗 Driver</option>
+                    <option value="House Help" <%= service.category === 'House Help' ? 'selected' : '' %>>🧹 House Help</option>
                 </select>
                 <div class="invalid-feedback">Please select a service category.</div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label" for="phone">Phone Number <span class="text-muted">(must be 10 digits & unique)</span></label>
-                <input type="tel" name="service[phone]" id="phone" pattern="[0-9]{10}" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" class="form-control" placeholder="e.g. 9876543210" required>
+                <input type="tel" name="service[phone]" id="phone" pattern="[0-9]{10}" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" class="form-control" value="<%= service.phone %>" placeholder="e.g. 9876543210" required>
                 <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
                 <div class="form-text">This will be shared directly with users requesting services.</div>
             </div>
@@ -36,30 +36,36 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label" for="city">City</label>
-                    <input type="text" name="service[city]" id="city" class="form-control" placeholder="e.g. Mumbai" required>
+                    <input type="text" name="service[city]" id="city" class="form-control" value="<%= service.city || '' %>" placeholder="e.g. Mumbai" required>
                     <div class="invalid-feedback">Please enter a city.</div>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label" for="country">Country</label>
-                    <input type="text" name="service[country]" id="country" class="form-control" placeholder="e.g. India" required>
+                    <input type="text" name="service[country]" id="country" class="form-control" value="<%= service.country || '' %>" placeholder="e.g. India" required>
                     <div class="invalid-feedback">Please enter a country.</div>
                 </div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label" for="location">Location / Area</label>
-                <input type="text" name="service[location]" id="location" class="form-control" placeholder="e.g. Bandra West" required>
+                <input type="text" name="service[location]" id="location" class="form-control" value="<%= service.location || '' %>" placeholder="e.g. Bandra West" required>
                 <div class="invalid-feedback">Please enter a location.</div>
             </div>
 
             <div class="mb-4">
-                <label class="form-label" for="photo">Profile Photo</label>
+                <label class="form-label" for="photo">Change Profile Photo</label>
+                <% if (service.photo && service.photo.url) { %>
+                    <div class="mb-2">
+                        <p class="text-muted small mb-1">Current Photo:</p>
+                        <img src="<%= service.photo.url %>" alt="current" class="rounded" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #eaeaea;">
+                    </div>
+                <% } %>
                 <input type="file" name="photo" id="photo" class="form-control" accept="image/*">
-                <div class="form-text">Choose a clean profile-style image.</div>
+                <div class="form-text">Leave empty if you do not want to change the photo.</div>
             </div>
 
             <div class="d-flex gap-3">
-                <button type="submit" class="btn btn-dark">List Service</button>
+                <button type="submit" class="btn btn-dark">Update Details</button>
                 <a href="/services" class="btn btn-outline-secondary">Cancel</a>
             </div>
         </form>

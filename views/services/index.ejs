@@ -30,8 +30,13 @@
                                 alt="<%= service.name %>"
                                 class="service-avatar"
                             >
-                            <div>
+                             <div>
                                 <h4 class="mb-1 fw-bold fs-5"><%= service.name %></h4>
+                                <% if (service.location || service.city || service.country) { %>
+                                <p class="mb-1 text-muted small">
+                                    📍 <%= [service.location, service.city, service.country].filter(Boolean).join(', ') %>
+                                </p>
+                                <% } %>
                                 <div class="d-flex align-items-center gap-2 flex-wrap">
                                     <% 
                                         const badgeClasses = {
@@ -60,11 +65,16 @@
                             <% const isAdmin = !!currAdmin; %>
 
                             <% if (isOwner || isAdmin) { %>
-                                <form action="/services/<%= service._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Remove this service listing?')">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm border-0 rounded-circle" title="Delete Service">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
-                                </form>
+                                <div class="d-flex align-items-center gap-2">
+                                    <a href="/services/<%= service._id %>/edit" class="btn btn-outline-secondary btn-sm border-0 rounded-circle" title="Edit Service">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                    <form action="/services/<%= service._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Remove this service listing?')" class="m-0">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm border-0 rounded-circle" title="Delete Service">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             <% } %>
                         </div>
                     </div>

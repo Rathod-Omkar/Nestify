@@ -51,7 +51,7 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="phoneNumber">Phone Number</label>
                                     <input type="tel" name="user[phoneNumber]" id="phoneNumber"
-                                        value="<%= currUser.phoneNumber || "" %>" class="form-control">
+                                        value="<%= currUser.phoneNumber || "" %>" pattern="[0-9]{10}" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" class="form-control" placeholder="10-digit number">
                                 </div>
 
                                 <!-- <div class="mb-3">

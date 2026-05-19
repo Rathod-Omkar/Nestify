@@ -21,7 +21,7 @@
 
             <div class="mb-3">
                 <label class="form-label" for="phoneNumber">Phone Number</label>
-                <input type="number" name="user[phoneNumber]" maxlength="10" onkeypress="return event.charCode >= 48" id="phoneNumber" class="form-control"  required>
+                <input type="tel" name="user[phoneNumber]" pattern="[0-9]{10}" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" id="phoneNumber" class="form-control" placeholder="10-digit number" required>
             </div>
 
             <div class="mb-3">

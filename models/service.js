@@ -28,6 +28,21 @@ const serviceSchema = new Schema({
             default: "icon.png",
         },
     },
+    location: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    city: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    country: {
+        type: String,
+        required: true,
+        trim: true,
+    },
     owner: {
         type: Schema.Types.ObjectId,
         ref: "User",

@@ -21,7 +21,7 @@
                         <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.image.filename || listing.title %>">
                         <div class="card-body">
                             <h5 class="card-title"><%= listing.title %></h5>
-                            <p class="card-text mb-1"><%= listing.location %>, <%= listing.country %></p>
+                            <p class="card-text mb-1"><%= [listing.location, listing.city, listing.state, listing.country].filter(Boolean).join(', ') %></p>
                             <p class="text-muted mb-2">&#8377; <%= listing.price.toLocaleString("en-IN") %> / night</p>
                             <p class="card-text"><%= listing.description %></p>
 

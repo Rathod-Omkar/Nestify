@@ -114,21 +114,32 @@
         </div>
         
         <div class="row">
-        <div class="mb-3 col-md-4">
-        <label class="form-label" for="price">Enter Price </label>
-       <input type="number" name="listing[price]" placeholder="ex.1500" class="form-control" required="true">
-        </div>
-        
-        <div class="mb-3 col-md-6">
-        <label class="form-label" for="location">Enter Location </label>
-        <input type="text" name="listing[location]" placeholder="ex. Pune" class="form-control" required="true">
-        </div>
+            <div class="mb-3 col-md-4">
+                <label class="form-label" for="price">Enter Price</label>
+                <input type="number" name="listing[price]" placeholder="ex. 1500" class="form-control" required="true">
+            </div>
+            
+            <div class="mb-3 col-md-8">
+                <label class="form-label" for="location">Enter Location / Address</label>
+                <input type="text" name="listing[location]" placeholder="ex. Deccan Gymkhana" class="form-control" required="true">
+            </div>
         </div>
        
-    
-        <div class="mb-3">
-        <label class="form-label" for="country">Enter country </label>
-        <input type="text" name="listing[country]" placeholder="ex. India" class="form-control" required="true">
+        <div class="row">
+            <div class="mb-3 col-md-4">
+                <label class="form-label" for="city">Enter City</label>
+                <input type="text" name="listing[city]" placeholder="ex. Pune" class="form-control" required="true">
+            </div>
+
+            <div class="mb-3 col-md-4">
+                <label class="form-label" for="state">Enter State</label>
+                <input type="text" name="listing[state]" placeholder="ex. Maharashtra" class="form-control" required="true">
+            </div>
+
+            <div class="mb-3 col-md-4">
+                <label class="form-label" for="country">Enter Country</label>
+                <input type="text" name="listing[country]" placeholder="ex. India" class="form-control" required="true">
+            </div>
         </div>
         
        <br> <button type="submit" class="btn btn-dark offset-5 mb-3">Submit for Review</button>

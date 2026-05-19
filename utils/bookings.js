@@ -1,9 +1,11 @@
 const Booking = require("../models/booking.js");
 
 function parseBookingDate(value) {
-    const date = new Date(value);
-    date.setHours(0, 0, 0, 0);
-    return date;
+    if (!value || typeof value !== "string") return new Date(NaN);
+    const parts = value.split("-");
+    if (parts.length !== 3) return new Date(NaN);
+    const [year, month, day] = parts.map(Number);
+    return new Date(year, month - 1, day, 0, 0, 0, 0);
 }
 
 function getNightCount(checkIn, checkOut) {
@@ -35,7 +37,10 @@ async function getConflictingBookings(listingId, checkIn, checkOut) {
 }
 
 function formatDateForInput(date) {
-    return date.toISOString().split("T")[0];
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
 }
 
 function getUnavailableDates(bookings) {

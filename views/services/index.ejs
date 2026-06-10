@@ -7,12 +7,24 @@
             <a href="/services/new" class="btn btn-dark">+ Add Service</a>
         </div>
 
+        <%# Search bar %>
+        <form action="/services" method="GET" class="mb-4">
+            <div class="input-group shadow-sm rounded">
+                <% if (selectedCategory) { %>
+                    <input type="hidden" name="category" value="<%= selectedCategory %>">
+                <% } %>
+                <span class="input-group-text bg-white border-end-0 text-muted"><i class="fa-solid fa-location-dot"></i></span>
+                <input type="text" name="q" class="form-control border-start-0 ps-0" placeholder="Search by city, state, or location..." value="<%= locals.searchQuery || '' %>">
+                <button class="btn btn-dark px-4" type="submit">Search</button>
+            </div>
+        </form>
+
         <%# Category filter tabs %>
         <div class="mb-4 d-flex gap-2 flex-wrap">
-            <a href="/services" class="btn btn-sm <%= !selectedCategory ? 'btn-dark' : 'btn-outline-secondary' %>">All</a>
-            <a href="/services?category=tour guide" class="btn btn-sm <%= selectedCategory === 'tour guide' ? 'btn-dark' : 'btn-outline-secondary' %>">🗺️ Tour Guides</a>
-            <a href="/services?category=Driver" class="btn btn-sm <%= selectedCategory === 'Driver' ? 'btn-dark' : 'btn-outline-secondary' %>">🚗 Drivers</a>
-            <a href="/services?category=House Help" class="btn btn-sm <%= selectedCategory === 'House Help' ? 'btn-dark' : 'btn-outline-secondary' %>">🧹 House Help</a>
+            <a href="/services<%= locals.searchQuery ? '?q=' + encodeURIComponent(locals.searchQuery) : '' %>" class="btn btn-sm <%= !selectedCategory ? 'btn-dark' : 'btn-outline-secondary' %>">All</a>
+            <a href="/services?category=tour guide<%= locals.searchQuery ? '&q=' + encodeURIComponent(locals.searchQuery) : '' %>" class="btn btn-sm <%= selectedCategory === 'tour guide' ? 'btn-dark' : 'btn-outline-secondary' %>">🗺️ Tour Guides</a>
+            <a href="/services?category=Driver<%= locals.searchQuery ? '&q=' + encodeURIComponent(locals.searchQuery) : '' %>" class="btn btn-sm <%= selectedCategory === 'Driver' ? 'btn-dark' : 'btn-outline-secondary' %>">🚗 Drivers</a>
+            <a href="/services?category=House Help<%= locals.searchQuery ? '&q=' + encodeURIComponent(locals.searchQuery) : '' %>" class="btn btn-sm <%= selectedCategory === 'House Help' ? 'btn-dark' : 'btn-outline-secondary' %>">🧹 House Help</a>
         </div>
 
         <% if (services.length === 0) { %>

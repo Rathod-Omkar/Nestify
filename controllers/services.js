@@ -2,12 +2,20 @@ const Service = require("../models/service.js");
 const {buildUploadedFile} = require("../utils/uploads.js");
 
 async function index(req, res) {
-    const {category} = req.query;
+    const {category, q} = req.query;
     const query = {};
 
     if (category) {
         // Handle exact case match or mapping
         query.category = category;
+    }
+
+    if (q) {
+        query.$or = [
+            { city: { $regex: q, $options: "i" } },
+            { location: { $regex: q, $options: "i" } },
+            { country: { $regex: q, $options: "i" } }
+        ];
     }
 
     const services = await Service.find(query)
@@ -17,6 +25,7 @@ async function index(req, res) {
     res.render("services/index.ejs", {
         services,
         selectedCategory: category || "",
+        searchQuery: q || "",
         categories: ["tour guide", "Driver", "House Help"],
     });
 }

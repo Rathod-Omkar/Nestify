@@ -44,26 +44,26 @@
                         <p class="mb-1 fw-semibold small">Meal Type</p>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="mealTypes" id="mealVeg" value="veg" <%= listing.meals && listing.meals.types && listing.meals.types.includes('veg') ? 'checked' : '' %>>
-                            <label class="form-check-label" for="mealVeg">🥦 Vegetarian</label>
+                            <label class="form-check-label" for="mealVeg">Vegetarian</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="mealTypes" id="mealNonveg" value="nonveg" <%= listing.meals && listing.meals.types && listing.meals.types.includes('nonveg') ? 'checked' : '' %>>
-                            <label class="form-check-label" for="mealNonveg">🍗 Non-Vegetarian</label>
+                            <label class="form-check-label" for="mealNonveg">Non-Vegetarian</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <p class="mb-1 fw-semibold small">Meal Times</p>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="mealOptions" id="mealBreakfast" value="breakfast" <%= listing.meals && listing.meals.options && listing.meals.options.includes('breakfast') ? 'checked' : '' %>>
-                            <label class="form-check-label" for="mealBreakfast">🌅 Breakfast</label>
+                            <label class="form-check-label" for="mealBreakfast">Breakfast</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="mealOptions" id="mealLunch" value="lunch" <%= listing.meals && listing.meals.options && listing.meals.options.includes('lunch') ? 'checked' : '' %>>
-                            <label class="form-check-label" for="mealLunch">☀️ Lunch</label>
+                            <label class="form-check-label" for="mealLunch">Lunch</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="mealOptions" id="mealDinner" value="dinner" <%= listing.meals && listing.meals.options && listing.meals.options.includes('dinner') ? 'checked' : '' %>>
-                            <label class="form-check-label" for="mealDinner">🌙 Dinner</label>
+                            <label class="form-check-label" for="mealDinner">Dinner</label>
                         </div>
                     </div>
                 </div>

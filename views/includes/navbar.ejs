@@ -1,12 +1,14 @@
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/dashboard"><img src="/css/small logo.png" alt="" class="logo"></a>
+    <a class="navbar-brand" href="<%= currAdmin ? '/admin' : '/dashboard' %>"><img src="/css/small logo.png" alt="" class="logo"></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" href="/dashboard">Home</a>
+        <% if (!currAdmin) { %>
+          <a class="nav-link" href="/dashboard">Home</a>
+        <% } %>
         <a class="nav-link" href="/listings">All Listings</a>
         <% if (currUser) { %>
           <a class="nav-link" href="/services">Services</a>

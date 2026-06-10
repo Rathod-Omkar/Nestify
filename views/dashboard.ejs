@@ -1,162 +1,97 @@
 <% layout("/layouts/boilerplate.ejs") %>
 
-    <div class="dashboard-hero">
-        <div class="dashboard-hero-content">
-            <h1 class="dashboard-welcome">Welcome back, <span class="dashboard-username">
-                    <%= currUser.username %>
-                </span> 👋</h1>
-            <p class="dashboard-subtitle">What are you looking for today?</p>
-
-            <div class="dashboard-cards">
-                <a href="/listings?category=normal" class="dashboard-card dashboard-card-normal">
-                    <div class="dashboard-card-icon">🏠</div>
-                    <h2>Private Listings</h2>
-                    <p>Private homes, apartments &amp; standalone properties for solo or family stays.</p>
-                    <span class="dashboard-card-btn">Browse Normal &rarr;</span>
-                </a>
-
-                <a href="/listings?category=shared" class="dashboard-card dashboard-card-shared">
-                    <div class="dashboard-card-icon">🤝</div>
-                    <h2>Co-Nest</h2>
-                    <p>Shared spaces, co-living &amp; community-style accommodations.</p>
-                    <span class="dashboard-card-btn">Browse Co-Nest &rarr;</span>
-                </a>
+<div class="dashboard-container container mt-5 mb-5">
+    <!-- Hero Section -->
+    <div class="row align-items-center mb-5 pb-3 border-bottom">
+        <div class="col-lg-6 mb-4 mb-lg-0 pe-lg-5">
+            <h1 class="dashboard-welcome display-4 fw-bold">Welcome back, <span class="text-primary"><%= currUser.username %></span></h1>
+            <p class="dashboard-subtitle lead text-muted mt-3">What are you looking for today? Discover your next perfect stay or an authentic shared community.</p>
+            <div class="quick-links mt-4">
+                <a href="/listings/my-listings" class="text-decoration-none fw-semibold me-4"><i class="fa-solid fa-house-user me-2"></i>My Listings</a>
+                <a href="/my-bookings" class="text-decoration-none fw-semibold"><i class="fa-solid fa-calendar-check me-2"></i>My Bookings</a>
             </div>
-
-            <div class="dashboard-actions">
-                <a href="/listings" class="btn btn-outline-secondary">View All Listings</a>
-                <a href="/listings/my-listings" class="btn btn-outline-dark">My Listings</a>
+        </div>
+        <div class="col-lg-6">
+            <div class="hero-graphic rounded-4 overflow-hidden shadow-sm" style="height: 280px; background: url('https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&q=80&w=1200') center/cover;">
             </div>
         </div>
     </div>
 
-    <style>
-        .dashboard-hero {
-            min-height: calc(100vh - 70px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e8edf5 100%);
-            padding: 2rem 1rem;
-        }
+    <!-- Choices / Grid -->
+    <div class="d-flex justify-content-between align-items-end mb-4">
+        <h3 class="fw-bold mb-0">Explore Nestify</h3>
+        <a href="/listings" class="text-decoration-none fw-bold text-primary">View All Listings &rarr;</a>
+    </div>
 
-        [data-bs-theme="dark"] .dashboard-hero {
-            background: linear-gradient(135deg, #1a1d24 0%, #232733 100%);
-        }
+    <div class="row g-4">
+        <!-- Private Listings Card -->
+        <div class="col-md-6">
+            <a href="/listings?category=normal" class="text-decoration-none">
+                <div class="card-horizontal rounded-4 overflow-hidden position-relative shadow-sm" style="background: url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800') center/cover; height: 260px;">
+                    <div class="card-overlay position-absolute top-0 start-0 w-100 h-100 p-4 d-flex flex-column justify-content-end">
+                        <h2 class="text-white fw-bold mb-1">Private Listings</h2>
+                        <p class="text-white-50 mb-0">Private homes, apartments &amp; standalone properties.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Co-Nest Card -->
+        <div class="col-md-6">
+            <a href="/listings?category=shared" class="text-decoration-none">
+                <div class="card-horizontal rounded-4 overflow-hidden position-relative shadow-sm" style="background: url('https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=800') center/cover; height: 260px;">
+                    <div class="card-overlay position-absolute top-0 start-0 w-100 h-100 p-4 d-flex flex-column justify-content-end">
+                        <h2 class="text-white fw-bold mb-1">Co-Nest</h2>
+                        <p class="text-white-50 mb-0">Cozy shared spaces &amp; community-style living.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
 
-        .dashboard-hero-content {
-            text-align: center;
-            max-width: 860px;
-            width: 100%;
-        }
+<style>
+    .card-overlay {
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+        transition: background 0.3s ease;
+    }
+    
+    .card-horizontal {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        .dashboard-welcome {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
+    .card-horizontal:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2) !important;
+    }
 
-        .dashboard-username {
-            color: #6366f1;
-        }
+    .card-horizontal:hover .card-overlay {
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 100%);
+    }
 
-        [data-bs-theme="dark"] .dashboard-username {
-            color: #818cf8;
-        }
+    .dashboard-welcome {
+        letter-spacing: -0.02em;
+    }
 
-        .dashboard-subtitle {
-            font-size: 1.1rem;
-            color: #6b7280;
-            margin-bottom: 2.5rem;
-        }
+    .quick-links a {
+        color: #4f46e5;
+        transition: color 0.2s ease;
+        font-size: 1.05rem;
+    }
+    
+    [data-bs-theme="dark"] .quick-links a {
+        color: #818cf8;
+    }
 
-        .dashboard-cards {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
+    .quick-links a:hover {
+        color: #3730a3;
+    }
 
-        .dashboard-card {
-            flex: 1 1 280px;
-            max-width: 340px;
-            border-radius: 1.25rem;
-            padding: 2.5rem 2rem;
-            text-decoration: none;
-            color: inherit;
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            border: 2px solid transparent;
-        }
-
-        .dashboard-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
-            color: inherit;
-        }
-
-        .dashboard-card-normal {
-            background: #ffffff;
-            border-color: #e5e7eb;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
-        }
-
-        [data-bs-theme="dark"] .dashboard-card-normal {
-            background: #1e2130;
-            border-color: #374151;
-        }
-
-        .dashboard-card-shared {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            color: #ffffff !important;
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
-        }
-
-        .dashboard-card-shared:hover {
-            color: #ffffff !important;
-            box-shadow: 0 16px 40px rgba(99, 102, 241, 0.4);
-        }
-
-        .dashboard-card-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            line-height: 1;
-        }
-
-        .dashboard-card h2 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .dashboard-card p {
-            font-size: 0.95rem;
-            opacity: 0.8;
-            margin-bottom: 1.25rem;
-        }
-
-        .dashboard-card-btn {
-            font-weight: 600;
-            font-size: 0.9rem;
-            letter-spacing: 0.02em;
-        }
-
-        .dashboard-card-normal .dashboard-card-btn {
-            color: #6366f1;
-        }
-
-        .dashboard-card-shared .dashboard-card-btn {
-            color: rgba(255, 255, 255, 0.95);
-        }
-
-        .dashboard-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-    </style>
+    [data-bs-theme="dark"] .quick-links a:hover {
+        color: #a5b4fc;
+    }
+    
+    [data-bs-theme="dark"] .dashboard-subtitle {
+        color: #9ca3af !important;
+    }
+</style>

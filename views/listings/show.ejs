@@ -76,8 +76,8 @@
                     <div>
                         <strong>Meals Available</strong>
                         <div class="d-flex flex-wrap gap-1 mt-1">
-                            <% const mealTypeLabels = {veg: '🥦 Veg', nonveg: '🍗 Non-Veg'}; %>
-                            <% const mealOptionLabels = {breakfast: '🌅 Breakfast', lunch: '☀️ Lunch', dinner: '🌙 Dinner'}; %>
+                            <% const mealTypeLabels = {veg: 'Veg', nonveg: 'Non-Veg'}; %>
+                            <% const mealOptionLabels = {breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner'}; %>
                             <% if (listing.meals.types) { for (let t of listing.meals.types) { %><span class="badge text-bg-light border"><%= mealTypeLabels[t] || t %></span><% } } %>
                             <% if (listing.meals.options) { for (let o of listing.meals.options) { %><span class="badge text-bg-light border"><%= mealOptionLabels[o] || o %></span><% } } %>
                         </div>

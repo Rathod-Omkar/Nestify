@@ -60,7 +60,7 @@
                     📍 <%= [listing.location, listing.city, listing.state, listing.country].filter(Boolean).join(', ') %>
                 </h5>
                 <span class="badge <%= listing.category === 'shared' ? 'text-bg-primary' : 'text-bg-secondary' %>">
-                    <%= listing.category === 'shared' ? '🤝 Co-Nest' : '🏠 Normal' %>
+                    <%= listing.category === 'shared' ? 'Co-Nest' : 'Normal' %>
                 </span>
             </div>
             <p class="text-muted mb-0">&#8377; <%= listing.price.toLocaleString("en-IN") %> / night</p>

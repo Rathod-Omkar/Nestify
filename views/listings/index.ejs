@@ -23,12 +23,12 @@
                                                 <%= listing.title %>
                                             </b> <br>
                                             <span class="text-muted small">
-                                                📍 <%= [listing.location, listing.city, listing.state, listing.country].filter(Boolean).join(', ') %>
+                                                 <%= [listing.location, listing.city, listing.state, listing.country].filter(Boolean).join(', ') %>
                                             </span> <br>
                                             &#8377; <%= listing.price.toLocaleString("en-IN") %>/night</p>
                                         <div class="listing-rating-lines">
                                             <span
-                                                class="badge <%= listing.category === 'shared' ? 'text-bg-primary' : 'text-bg-light' %> me-1">
+                                                class="badge <%= listing.category === 'shared' ? 'text-bg-dark' : 'text-bg-light' %> me-1">
                                                 <%= listing.category==='shared' ? 'Co-Nest' : 'Normal' %>
                                             </span>
                                             <span>Women safety <span class="rating-stars">

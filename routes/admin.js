@@ -17,6 +17,7 @@ router.post("/admins", isAdmin, isSuperAdmin, wrapAsync(admin.createAdmin));
 router.delete("/admins/:id", isAdmin, isSuperAdmin, wrapAsync(admin.deleteAdmin));
 
 router.get("/users", isAdmin, wrapAsync(admin.usersIndex));
+router.get("/users/:id/listings", isAdmin, wrapAsync(admin.userListings));
 router.delete("/users/:id", isAdmin, wrapAsync(admin.deleteUser));
 
 module.exports = router;

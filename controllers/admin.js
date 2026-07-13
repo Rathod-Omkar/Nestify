@@ -166,6 +166,17 @@ async function usersIndex(req, res) {
     res.render("admin/users/index.ejs", {users, listingCountMap});
 }
 
+async function userListings(req, res) {
+    const {id} = req.params;
+    const user = await User.findById(id);
+    if (!user) {
+        req.flash("error", "User not found.");
+        return res.redirect("/admin/users");
+    }
+    const listings = await Listing.find({UserID: id}).sort({_id: -1});
+    res.render("admin/users/listings.ejs", {user, listings});
+}
+
 async function deleteUser(req, res) {
     const {id} = req.params;
     await Listing.deleteMany({UserID: id});
@@ -187,5 +198,6 @@ module.exports = {
     logout,
     newAdmin,
     rejectListing,
+    userListings,
     usersIndex,
 };

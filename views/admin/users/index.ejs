@@ -43,10 +43,13 @@
                                     <% } %>
                                 </td>
                                 <td>
-                                    <form action="/admin/users/<%= user._id %>?_method=DELETE" method="POST"
-                                        onsubmit="return confirm('Delete <%= user.username %>? This cannot be undone.')">
-                                        <button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
-                                    </form>
+                                    <div class="d-flex gap-2">
+                                        <a href="/admin/users/<%= user._id %>/listings" class="btn btn-outline-primary btn-sm">View All Listings</a>
+                                        <form action="/admin/users/<%= user._id %>?_method=DELETE" method="POST"
+                                            onsubmit="return confirm('Delete <%= user.username %>? This cannot be undone.')">
+                                            <button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         <% } %>

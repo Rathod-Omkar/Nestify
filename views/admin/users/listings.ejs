@@ -1,0 +1,73 @@
+<% layout("/layouts/boilerplate")%>
+
+<div class="row mt-4 mb-5">
+    <div class="col-lg-10 offset-lg-1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="mb-1">Listings by <%= user.username %></h1>
+                <p class="text-muted mb-0">
+                    <%= listings.length %> listing<%= listings.length !== 1 ? "s" : "" %> &bull;
+                    <span class="text-muted"><%= user.email %></span>
+                </p>
+            </div>
+            <a href="/admin/users" class="btn btn-outline-secondary">Back to Users</a>
+        </div>
+
+        <% if (listings.length === 0) { %>
+            <div class="text-center py-5">
+                <p class="text-muted fs-5">This user has no listings yet.</p>
+            </div>
+        <% } else { %>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <% for (let listing of listings) { %>
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+                            <img src="<%= listing.image.url %>" class="card-img-top"
+                                style="height: 200px; object-fit: cover;"
+                                alt="<%= listing.image.filename || listing.title %>">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><%= listing.title %></h5>
+                                <p class="card-text text-muted mb-1">
+                                    <%= [listing.location, listing.city, listing.state, listing.country].filter(Boolean).join(', ') %>
+                                </p>
+                                <p class="fw-semibold mb-2">&#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> / night</p>
+
+                                <div class="mb-2">
+                                    <% if (listing.status === "approved") { %>
+                                        <span class="badge text-bg-success">Approved</span>
+                                    <% } else if (listing.status === "pending") { %>
+                                        <span class="badge text-bg-warning">Pending</span>
+                                    <% } else if (listing.status === "rejected") { %>
+                                        <span class="badge text-bg-danger">Rejected</span>
+                                    <% } %>
+                                    <% if (listing.category === "shared") { %>
+                                        <span class="badge text-bg-info">Shared</span>
+                                    <% } %>
+                                </div>
+
+                                <% if (listing.description) { %>
+                                    <p class="card-text small text-muted flex-grow-1">
+                                        <%= listing.description.length > 120 ? listing.description.substring(0, 120) + "..." : listing.description %>
+                                    </p>
+                                <% } %>
+
+                                <div class="d-flex flex-wrap gap-1 mb-2">
+                                    <% const labels = {hasSolar: "Solar", wasteSegregation: "Waste", rainwaterHarvesting: "Rainwater", energyEfficientAppliances: "Efficient", publicTransportAccess: "Transport", waterSavingFixtures: "Water"}; %>
+                                    <% for (let field of Object.keys(labels)) { %>
+                                        <% if (listing.sustainabilityChecklist && listing.sustainabilityChecklist[field]) { %>
+                                            <span class="badge text-bg-success" style="font-size: 0.7em;"><%= labels[field] %></span>
+                                        <% } %>
+                                    <% } %>
+                                </div>
+
+                                <div class="mt-auto">
+                                    <a href="/listings/<%= listing._id %>" class="btn btn-outline-primary btn-sm w-100">View Listing</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
+</div>

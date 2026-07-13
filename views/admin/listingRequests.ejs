@@ -1,27 +1,32 @@
 <% layout("/layouts/boilerplate")%>
 
-<div class="row mt-4 mb-5">
-    <div class="col-lg-10 offset-lg-1">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h1 class="mb-1">Listing Requests</h1>
-                <p class="text-muted mb-0">Review pending owner submissions before they appear publicly.</p>
+    <div class="row mt-4 mb-5">
+        <div class="col-lg-10 offset-lg-1">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="mb-1">Listing Requests</h1>
+                    <p class="text-muted mb-0">Review pending owner submissions before they appear publicly.</p>
+                </div>
+                <a href="/admin" class="btn btn-outline-secondary">Back to Dashboard</a>
             </div>
-            <a href="/admin" class="btn btn-outline-secondary">Back to Dashboard</a>
-        </div>
 
-        <% if (pendingListings.length === 0) { %>
-            <p class="text-muted">No pending listing requests.</p>
-        <% } %>
+            <% if (pendingListings.length===0) { %>
+                <p class="text-muted">No pending listing requests.</p>
+                <% } %>
 
-        <div class="row row-cols-1 row-cols-lg-2 g-4">
-            <% for (let listing of pendingListings) { %>
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.image.filename || listing.title %>">
-                        <div class="card-body">
-                            <h5 class="card-title"><%= listing.title %></h5>
-                            <p class="card-text mb-1"><%= [listing.location, listing.city, listing.state, listing.country].filter(Boolean).join(', ') %></p>
+                    <div class="row row-cols-1 row-cols-lg-2 g-4">
+                        <% for (let listing of pendingListings) { %>
+                            <div class="col">
+                                <div class="card h-100">
+                                    <img src="<%= listing.image.url %>" class="card-img-top"
+                                        alt="<%= listing.image.filename || listing.title %>">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <%= listing.title %>
+                                        </h5>
+                                        <p class="card-text mb-1">
+                                            <%= [listing.location, listing.city, listing.state,
+                                                listing.country].filter(Boolean).join(', ') %></p>
                             <p class="text-muted mb-2">&#8377; <%= listing.price.toLocaleString("en-IN") %> / night</p>
                             <p class="card-text"><%= listing.description %></p>
 
@@ -45,7 +50,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <h6>Sustainability score: <%= listing.sustainabilityRating || 0 %> / 5</h6>
+                                <h6>Sustainability : </h6>
                                 <% const labels = {hasSolar: "Solar", wasteSegregation: "Waste segregation", rainwaterHarvesting: "Rainwater harvesting", energyEfficientAppliances: "Efficient appliances", publicTransportAccess: "Public transport", waterSavingFixtures: "Water saving fixtures"}; %>
                                 <div class="d-flex flex-wrap gap-2">
                                     <% for (let field of Object.keys(labels)) { %>

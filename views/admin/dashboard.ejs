@@ -52,39 +52,48 @@
                 <a href="/admin/listing-requests" class="btn btn-dark">Review Listings (<%= pendingListingCount %>)</a>
                 <a href="/admin/users" class="btn btn-dark">Manage Users</a>
                 <a href="/admin/admins" class="btn btn-dark">Manage Admins</a>
-                <a href="/listings" class="btn btn-outline-secondary ms-2">View Listings</a>
+                <a href="/listings" class="btn btn-dark ms-2">View Listings</a>
             </div>
 
-            <!-- <div class="mt-5">
-            <h3 class="mb-3">Recent Review Activity</h3>
-            <% if (!recentAuditLogs.length) { %>
-                <p class="text-muted">No approval or rejection activity yet.</p>
-            <% } else { %>
-                <div class="table-responsive">
-                    <table class="table align-middle">
-                        <thead>
-                            <tr>
-                                <th>Listing</th>
-                                <th>Admin</th>
-                                <th>Action</th>
-                                <th>Reason</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% for (let log of recentAuditLogs) { %>
-                                <tr>
-                                    <td><%= log.listing ? log.listing.title : "Listing" %></td>
-                                    <td><%= log.admin ? log.admin.username : "Admin" %></td>
-                                    <td><span class="badge text-bg-<%= log.action === "approved" ? "success" : "danger" %>"><%= log.action %></span></td>
-                                    <td><%= log.reason || "-" %></td>
-                                    <td><%= log.createdAt.toLocaleString("en-IN") %></td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-            <% } %>
-        </div> -->
+            <div class="mt-5">
+                <h3 class="mb-3">Recent Review Activity</h3>
+                <% if (!recentAuditLogs.length) { %>
+                    <p class="text-muted">No approval or rejection activity yet.</p>
+                    <% } else { %>
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Listing</th>
+                                        <th>Admin</th>
+                                        <th>Action</th>
+                                        <th>Reason</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% for (let log of recentAuditLogs) { %>
+                                        <tr>
+                                            <td>
+                                                <%= log.listing ? log.listing.title : "Listing" %>
+                                            </td>
+                                            <td>
+                                                <%= log.admin ? log.admin.username : "Admin" %>
+                                            </td>
+                                            <td><span class="badge text-bg-<%= log.action === " approved" ? "success"
+                                                    : "danger" %>"><%= log.action %></span></td>
+                                            <td>
+                                                <%= log.reason || "-" %>
+                                            </td>
+                                            <td>
+                                                <%= log.createdAt.toLocaleString("en-IN") %>
+                                            </td>
+                                        </tr>
+                                        <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } %>
+            </div>
         </div>
     </div>

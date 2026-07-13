@@ -1,116 +1,134 @@
 <% layout("/layouts/boilerplate.ejs") %>
 
-<div class="row mt-4 mb-5">
-    <div class="col-lg-8 offset-lg-2">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="mb-0">Local Services</h1>
-            <a href="/services/new" class="btn btn-dark">+ Add Service</a>
-        </div>
-
-        <%# Search bar %>
-        <form action="/services" method="GET" class="mb-4">
-            <div class="input-group shadow-sm rounded">
-                <% if (selectedCategory) { %>
-                    <input type="hidden" name="category" value="<%= selectedCategory %>">
-                <% } %>
-                <span class="input-group-text bg-white border-end-0 text-muted"><i class="fa-solid fa-location-dot"></i></span>
-                <input type="text" name="q" class="form-control border-start-0 ps-0" placeholder="Search by city, state, or location..." value="<%= locals.searchQuery || '' %>">
-                <button class="btn btn-dark px-4" type="submit">Search</button>
+    <div class="row mt-4 mb-5">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="mb-0">Local Services</h1>
+                <a href="/services/new" class="btn btn-dark">+ Add Service</a>
             </div>
-        </form>
 
-        <%# Category filter tabs %>
-        <div class="mb-4 d-flex gap-2 flex-wrap">
-            <a href="/services<%= locals.searchQuery ? '?q=' + encodeURIComponent(locals.searchQuery) : '' %>" class="btn btn-sm <%= !selectedCategory ? 'btn-dark' : 'btn-outline-secondary' %>">All</a>
-            <a href="/services?category=tour guide<%= locals.searchQuery ? '&q=' + encodeURIComponent(locals.searchQuery) : '' %>" class="btn btn-sm <%= selectedCategory === 'tour guide' ? 'btn-dark' : 'btn-outline-secondary' %>">🗺️ Tour Guides</a>
-            <a href="/services?category=Driver<%= locals.searchQuery ? '&q=' + encodeURIComponent(locals.searchQuery) : '' %>" class="btn btn-sm <%= selectedCategory === 'Driver' ? 'btn-dark' : 'btn-outline-secondary' %>">🚗 Drivers</a>
-            <a href="/services?category=House Help<%= locals.searchQuery ? '&q=' + encodeURIComponent(locals.searchQuery) : '' %>" class="btn btn-sm <%= selectedCategory === 'House Help' ? 'btn-dark' : 'btn-outline-secondary' %>">🧹 House Help</a>
-        </div>
+            <%# Search bar %>
+                <form action="/services" method="GET" class="mb-4">
+                    <div class="input-group shadow-sm rounded">
+                        <% if (selectedCategory) { %>
+                            <input type="hidden" name="category" value="<%= selectedCategory %>">
+                            <% } %>
+                                <span class="input-group-text bg-white border-end-0 text-muted"><i
+                                        class="fa-solid fa-location-dot"></i></span>
+                                <input type="text" name="q" class="form-control border-start-0 ps-0"
+                                    placeholder="Search by city, state, or location..."
+                                    value="<%= locals.searchQuery || '' %>">
+                                <button class="btn btn-dark px-4" type="submit">Search</button>
+                    </div>
+                </form>
 
-        <% if (services.length === 0) { %>
-            <div class="text-center py-5 border rounded bg-light">
-                <p class="text-muted fs-5 mb-0">No services found in this category.</p>
-                <a href="/services/new" class="btn btn-outline-dark btn-sm mt-3">Be the first to list!</a>
-            </div>
-        <% } else { %>
-            <div class="services-list d-flex flex-column gap-3">
-                <% for (let service of services) { %>
-                    <div class="service-card p-3 d-flex align-items-center justify-content-between border rounded bg-white shadow-sm transition-hover">
-                        <div class="d-flex align-items-center gap-3">
-                            <img
-                                src="<%= service.photo && service.photo.url ? service.photo.url : '/uploads/icon.png' %>"
-                                alt="<%= service.name %>"
-                                class="service-avatar"
-                            >
-                             <div>
-                                <h4 class="mb-1 fw-bold fs-5"><%= service.name %></h4>
-                                <% if (service.location || service.city || service.country) { %>
-                                <p class="mb-1 text-muted small">
-                                    📍 <%= [service.location, service.city, service.country].filter(Boolean).join(', ') %>
+                <%# Category filter tabs %>
+                    <div class="mb-4 d-flex gap-2 flex-wrap">
+                        <a href="/services<%= locals.searchQuery ? '?q=' + encodeURIComponent(locals.searchQuery) : '' %>"
+                            class="btn btn-sm <%= !selectedCategory ? 'btn-dark' : 'btn-outline-secondary' %>">All</a>
+                        <a href="/services?category=tour guide<%= locals.searchQuery ? '&q=' + encodeURIComponent(locals.searchQuery) : '' %>"
+                            class="btn btn-sm <%= selectedCategory === 'tour guide' ? 'btn-dark' : 'btn-outline-secondary' %>">
+                            Tour Guides</a>
+                        <a href="/services?category=Driver<%= locals.searchQuery ? '&q=' + encodeURIComponent(locals.searchQuery) : '' %>"
+                            class="btn btn-sm <%= selectedCategory === 'Driver' ? 'btn-dark' : 'btn-outline-secondary' %>">
+                            Drivers</a>
+                        <a href="/services?category=House Help<%= locals.searchQuery ? '&q=' + encodeURIComponent(locals.searchQuery) : '' %>"
+                            class="btn btn-sm <%= selectedCategory === 'House Help' ? 'btn-dark' : 'btn-outline-secondary' %>">
+                            House Help</a>
+                    </div>
+
+                    <% if (services.length===0) { %>
+                        <div class="text-center py-5 border rounded bg-light">
+                            <p class="text-muted fs-5 mb-0">No services found in this category.</p>
+                            <a href="/services/new" class="btn btn-outline-dark btn-sm mt-3">Be the first to list!</a>
+                        </div>
+                        <% } else { %>
+                            <div class="services-list d-flex flex-column gap-3">
+                                <% for (let service of services) { %>
+                                    <div
+                                        class="service-card p-3 d-flex align-items-center justify-content-between border rounded bg-white shadow-sm transition-hover">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <img src="<%= service.photo && service.photo.url ? service.photo.url : '/uploads/icon.png' %>"
+                                                alt="<%= service.name %>" class="service-avatar">
+                                            <div>
+                                                <h4 class="mb-1 fw-bold fs-5">
+                                                    <%= service.name %>
+                                                </h4>
+                                                <% if (service.location || service.city || service.country) { %>
+                                                    <p class="mb-1 text-muted small">
+                                                        <%= [service.location, service.city,
+                                                            service.country].filter(Boolean).join(', ') %>
                                 </p>
                                 <% } %>
                                 <div class="d-flex align-items-center gap-2 flex-wrap">
                                     <% 
                                         const badgeClasses = {
-                                            'tour guide': 'text-bg-primary',
-                                            'Driver': 'text-bg-success',
-                                            'House Help': 'text-bg-info'
-                                        };
-                                        const categoryLabels = {
-                                            'tour guide': 'Tour Guide',
-                                            'Driver': 'Driver',
-                                            'House Help': 'House Help'
-                                        };
-                                    %>
-                                    <span class="badge <%= badgeClasses[service.category] || 'text-bg-secondary' %>">
-                                        <%= categoryLabels[service.category] || service.category %>
-                                    </span>
-                                    <a href="tel:<%= service.phone %>" class="text-decoration-none text-muted small fw-semibold">
-                                        📞 <%= service.phone %>
-                                    </a>
-                                </div>
+                                            ' tour guide': 'text-bg-primary' , 'Driver' : 'text-bg-success'
+                                                            , 'House Help' : 'text-bg-info' }; const
+                                                            categoryLabels={ 'tour guide' : 'Tour Guide' , 'Driver'
+                                                            : 'Driver' , 'House Help' : 'House Help' }; %>
+                                                            <span
+                                                                class="badge <%= badgeClasses[service.category] || 'text-bg-secondary' %>">
+                                                                <%= categoryLabels[service.category] || service.category
+                                                                    %>
+                                                            </span>
+                                                            <a href="tel:<%= service.phone %>"
+                                                                class="text-decoration-none text-muted small fw-semibold">
+                                                                📞 <%= service.phone %>
+                                                            </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-3">
+                                        <% const isOwner=currUser && service.owner &&
+                                            service.owner._id.equals(currUser._id); %>
+                                            <% const isAdmin=!!currAdmin; %>
+
+                                                <% if (isOwner || isAdmin) { %>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <a href="/services/<%= service._id %>/edit"
+                                                            class="btn btn-outline-secondary btn-sm border-0 rounded-circle"
+                                                            title="Edit Service">
+                                                            <i class="fa-solid fa-pen"></i>
+                                                        </a>
+                                                        <form action="/services/<%= service._id %>?_method=DELETE"
+                                                            method="POST"
+                                                            onsubmit="return confirm('Remove this service listing?')"
+                                                            class="m-0">
+                                                            <button type="submit"
+                                                                class="btn btn-outline-danger btn-sm border-0 rounded-circle"
+                                                                title="Delete Service">
+                                                                <i class="fa-solid fa-trash-can"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                    <% } %>
+                                    </div>
                             </div>
-                        </div>
-
-                        <div class="d-flex align-items-center gap-3">
-                            <% const isOwner = currUser && service.owner && service.owner._id.equals(currUser._id); %>
-                            <% const isAdmin = !!currAdmin; %>
-
-                            <% if (isOwner || isAdmin) { %>
-                                <div class="d-flex align-items-center gap-2">
-                                    <a href="/services/<%= service._id %>/edit" class="btn btn-outline-secondary btn-sm border-0 rounded-circle" title="Edit Service">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </a>
-                                    <form action="/services/<%= service._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Remove this service listing?')" class="m-0">
-                                        <button type="submit" class="btn btn-outline-danger btn-sm border-0 rounded-circle" title="Delete Service">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    </form>
-                                </div>
                             <% } %>
-                        </div>
-                    </div>
-                <% } %>
-            </div>
+        </div>
         <% } %>
     </div>
-</div>
+    </div>
 
-<style>
-.service-avatar {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #eaeaea;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    background-color: #f8f9fa;
-}
-.transition-hover {
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.transition-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.08) !important;
-}
-</style>
+    <style>
+        .service-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #eaeaea;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            background-color: #f8f9fa;
+        }
+
+        .transition-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .transition-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08) !important;
+        }
+    </style>

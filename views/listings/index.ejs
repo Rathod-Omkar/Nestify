@@ -5,7 +5,7 @@
 
         <% const todayISO=new Date().toISOString().split("T")[0]; %>
 
-        <%- include("../includes/listing-filters.ejs", { todayISO }) %>
+            <%- include("../includes/listing-filters.ejs", { todayISO }) %>
 
                 <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1">
 
@@ -23,45 +23,43 @@
                                                 <%= listing.title %>
                                             </b> <br>
                                             <span class="text-muted small">
-                                                 <%= [listing.location, listing.city, listing.state, listing.country].filter(Boolean).join(', ') %>
+                                                <%= [listing.location, listing.city, listing.state,
+                                                    listing.country].filter(Boolean).join(', ') %>
                                             </span> <br>
                                             &#8377; <%= listing.price.toLocaleString("en-IN") %>/night</p>
                                         <div class="listing-rating-lines">
+                                            <% const isShared = listing.category === 'shared'; %>
                                             <span
-                                                class="badge <%= listing.category === 'shared' ? 'text-bg-dark' : 'text-bg-light' %> me-1">
-                                                <%= listing.category==='shared' ? 'Co-Nest' : 'Normal' %>
+                                                class="badge <%= isShared ? 'text-bg-dark' : 'text-bg-light' %> me-1">
+                                                    <%= isShared ? 'Co-Nest' : 'Normal' %>
                                             </span>
                                             <span>Women safety <span class="rating-stars">
                                                     <%= "★" .repeat(womenSafetyRating) %>
                                                         <%= "☆" .repeat(5 - womenSafetyRating) %>
                                                 </span></span>
-                                        </div>
-                                        <% if (listing.sustainabilityChecklist) { %>
-                                            <div class="d-flex flex-wrap gap-1 mt-1">
-                                                <% const sustainLabels = {
-                                                    hasSolar: "Solar",
-                                                    wasteSegregation: "Waste",
-                                                    rainwaterHarvesting: "Rainwater",
-                                                    energyEfficientAppliances: "Energy Eff.",
-                                                    publicTransportAccess: "Public Transport",
-                                                    waterSavingFixtures: "Water Saving"
-                                                }; %>
-                                                <% for (let [key, label] of Object.entries(sustainLabels)) { %>
-                                                    <% if (listing.sustainabilityChecklist[key]) { %>
-                                                        <span class="badge text-bg-success" style="font-size:0.65rem">
-                                                            <%= label %>
-                                                        </span>
-                                                    <% } %>
-                                                <% } %>
-                                            </div>
-                                        <% } %>
                                 </div>
+                                <% if (listing.sustainabilityChecklist) { %>
+                                    <div class="d-flex flex-wrap gap-1 mt-1">
+                                        <% const sustainLabels={ hasSolar: "Solar" , wasteSegregation: "Waste" ,
+                                            rainwaterHarvesting: "Rainwater" , energyEfficientAppliances: "Energy Eff."
+                                            , publicTransportAccess: "Public Transport" ,
+                                            waterSavingFixtures: "Water Saving" }; %>
+                                            <% for (let [key, label] of Object.entries(sustainLabels)) { %>
+                                                <% if (listing.sustainabilityChecklist[key]) { %>
+                                                    <span class="badge text-bg-success" style="font-size:0.65rem">
+                                                        <%= label %>
+                                                    </span>
+                                                    <% } %>
+                                                        <% } %>
+                                    </div>
+                                    <% } %>
                             </div>
-                        </a>
-
-                        <% } %>
-
                 </div>
+                </a>
+
+                <% } %>
+
+                    </div>
 
     </body>
 

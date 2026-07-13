@@ -100,6 +100,7 @@
                             <% const pricePerNight = booking.pricePerNight || (booking.listing ? booking.listing.price : 0); %>
                             <% const stayComplete = booking.checkOut <= new Date(); %>
                             <% const canRateWomenSafety = currUser && currUser.gender === "female" && booking.status === "accepted" && stayComplete && booking.listing && booking.listing.status === "approved" && !booking.womenSafetyRating; %>
+                            <!-- DEBUG: gender=<%= currUser ? currUser.gender : 'no-user' %> | status=<%= booking.status %> | stayComplete=<%= stayComplete %> | hasListing=<%= !!booking.listing %> | listingStatus=<%= booking.listing ? booking.listing.status : 'N/A' %> | womenSafetyRating=<%= booking.womenSafetyRating %> | canRate=<%= canRateWomenSafety %> -->
                             <% const canReviewProperty = booking.status === "accepted" && stayComplete && booking.listing && booking.listing.status === "approved" && !booking.propertyReview; %>
                             <tr>
                                 <td><%= propertyName %></td>
